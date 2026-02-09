@@ -1,0 +1,160 @@
+# Page snapshot
+
+```yaml
+- generic [active] [ref=e1]:
+  - banner [ref=e2]:
+    - generic [ref=e3]:
+      - link "QuickMart" [ref=e4] [cursor=pointer]:
+        - /url: /index.html
+      - navigation [ref=e5]:
+        - list [ref=e6]:
+          - listitem [ref=e7]:
+            - link "Home" [ref=e8] [cursor=pointer]:
+              - /url: /index.html
+          - listitem [ref=e9]:
+            - link "Products" [ref=e10] [cursor=pointer]:
+              - /url: /products.html
+          - listitem [ref=e11]:
+            - link "Wishlist 0" [ref=e12] [cursor=pointer]:
+              - /url: /wishlist.html
+              - img [ref=e13]
+              - text: Wishlist
+              - generic [ref=e15]: "0"
+          - listitem [ref=e16]:
+            - link "Cart 0" [ref=e17] [cursor=pointer]:
+              - /url: /cart.html
+              - img [ref=e18]
+              - text: Cart
+              - generic [ref=e20]: "0"
+          - listitem [ref=e21]:
+            - link "Login" [ref=e22] [cursor=pointer]:
+              - /url: /login.html
+          - listitem [ref=e23]:
+            - link "Sign up" [ref=e24] [cursor=pointer]:
+              - /url: /signup.html
+          - listitem
+  - generic [ref=e25]:
+    - generic [ref=e26]:
+      - generic [ref=e27]:
+        - generic [ref=e29]:
+          - heading "Fresh Deals" [level=2] [ref=e30]
+          - paragraph [ref=e31]: UP TO 40% OFF today!
+          - button "Shop Now" [ref=e32] [cursor=pointer]
+        - generic [ref=e34]:
+          - heading "Christmas Specials" [level=2] [ref=e35]
+          - paragraph [ref=e36]: Festive Picks · Holiday Deals
+          - button "Shop Now" [ref=e37] [cursor=pointer]
+      - generic:
+        - button "‹" [ref=e38] [cursor=pointer]
+        - button "›" [ref=e39] [cursor=pointer]
+    - generic [ref=e43]:
+      - generic [ref=e44] [cursor=pointer]:
+        - img "Vegetables" [ref=e46]
+        - generic [ref=e47]: Fresh Produce
+      - generic [ref=e48] [cursor=pointer]:
+        - img "Meat" [ref=e50]
+        - generic [ref=e51]: Meat & Seafood
+      - generic [ref=e52] [cursor=pointer]:
+        - img "Dairy" [ref=e54]
+        - generic [ref=e55]: Dairy & Eggs
+      - generic [ref=e56] [cursor=pointer]:
+        - img "Bakery" [ref=e58]
+        - generic [ref=e59]: Beverages
+      - generic [ref=e60] [cursor=pointer]:
+        - img "snack" [ref=e62]
+        - generic [ref=e63]: Snacks
+      - generic [ref=e64] [cursor=pointer]:
+        - img "snack" [ref=e66]
+        - generic [ref=e67]: Pantry Staples
+      - generic [ref=e68] [cursor=pointer]:
+        - img "snack" [ref=e70]
+        - generic [ref=e71]: Household Essentials
+    - heading "Recommended for You" [level=2] [ref=e72]
+    - generic [ref=e73]:
+      - generic [ref=e74] [cursor=pointer]:
+        - img "Pistachios Salted 200g" [ref=e75]
+        - generic [ref=e76]: Pistachios Salted 200g
+        - generic [ref=e77]: $6.90
+        - button "Add to Cart" [ref=e78]
+        - button "Add to wishlist" [ref=e79]:
+          - img [ref=e80]
+      - generic [ref=e82] [cursor=pointer]:
+        - img "Milk Chocolate Bar 100g" [ref=e83]
+        - generic [ref=e84]: Milk Chocolate Bar 100g
+        - generic [ref=e85]: $2.20
+        - button "Add to Cart" [ref=e86]
+        - button "Add to wishlist" [ref=e87]:
+          - img [ref=e88]
+      - generic [ref=e90] [cursor=pointer]:
+        - img "Dark Chocolate 70% 100g" [ref=e91]
+        - generic [ref=e92]: Dark Chocolate 70% 100g
+        - generic [ref=e93]: $2.80
+        - button "Add to Cart" [ref=e94]
+        - button "Add to wishlist" [ref=e95]:
+          - img [ref=e96]
+    - heading "Flash Deals · Today's Specials" [level=2] [ref=e98]
+    - generic [ref=e99]:
+      - generic [ref=e100]:
+        - generic [ref=e101]: 1 FOR 1
+        - generic [ref=e102]: 4:01:41
+        - generic [ref=e103]:
+          - generic [ref=e104] [cursor=pointer]:
+            - img "Broccoli Crown" [ref=e105]
+            - generic [ref=e106]: Broccoli Crown
+          - generic [ref=e107] [cursor=pointer]:
+            - img "Cherry Tomatoes (300g)" [ref=e108]
+            - generic [ref=e109]: Cherry Tomatoes (300g)
+        - generic [ref=e110]: Order before 5 PM to get Free Delivery
+      - generic [ref=e111]:
+        - generic [ref=e112]: 30%
+        - img "Strawberries (250g punnet)" [ref=e113]
+        - generic [ref=e114]: Strawberries (250g punnet)
+        - generic [ref=e115]:
+          - generic [ref=e116]: $5.10
+          - generic [ref=e117]: $6.63
+        - button "Add to Cart" [ref=e118] [cursor=pointer]
+        - button "Add to wishlist" [ref=e119] [cursor=pointer]:
+          - img [ref=e120]
+      - generic [ref=e122]:
+        - generic [ref=e123]: 20%
+        - img "Fresh Carrots (500g)" [ref=e124]
+        - generic [ref=e125]: Fresh Carrots (500g)
+        - generic [ref=e126]:
+          - generic [ref=e127]: $1.20
+          - generic [ref=e128]: $1.44
+        - button "Add to Cart" [ref=e129] [cursor=pointer]
+        - button "Add to wishlist" [ref=e130] [cursor=pointer]:
+          - img [ref=e131]
+    - heading "Quick Reorder" [level=2] [ref=e133]
+    - generic [ref=e134]:
+      - generic [ref=e135] [cursor=pointer]:
+        - img "Baby Spinach (200g)" [ref=e136]
+        - generic [ref=e137]: Baby Spinach (200g)
+        - generic [ref=e138]: $3.30
+        - button "Reorder" [ref=e139]
+        - button "Add to wishlist" [ref=e140]:
+          - img [ref=e141]
+      - generic [ref=e143] [cursor=pointer]:
+        - img "Brown Onions (1kg)" [ref=e144]
+        - generic [ref=e145]: Brown Onions (1kg)
+        - generic [ref=e146]: $2.00
+        - button "Reorder" [ref=e147]
+        - button "Add to wishlist" [ref=e148]:
+          - img [ref=e149]
+  - contentinfo [ref=e151]:
+    - generic [ref=e152]:
+      - link "QuickMart" [ref=e153] [cursor=pointer]:
+        - /url: /index.html
+      - navigation [ref=e154]:
+        - list [ref=e155]:
+          - listitem [ref=e156]:
+            - link "Home" [ref=e157] [cursor=pointer]:
+              - /url: /index.html
+          - listitem [ref=e158]:
+            - link "Products" [ref=e159] [cursor=pointer]:
+              - /url: /products.html
+          - listitem [ref=e160]:
+            - link "About Us" [ref=e161] [cursor=pointer]:
+              - /url: "#"
+      - generic [ref=e162]: © Amigas 2025. All rights reserved.
+```

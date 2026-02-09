@@ -1,0 +1,207 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model Something {
+  id        Int      @id @default(autoincrement())
+  name      String
+  createdAt DateTime @default(now())
+}
+
+model Person {
+  id     Int     @id @default(autoincrement())
+  email  String  @unique
+  name   String
+  avatar String?
+}
+
+model User {
+  id            Int            @id @default(autoincrement())
+  name          String
+  email         String         @unique
+  password      String
+  phone         String?
+  address       String?
+  bio           String?
+  profileImage  String?
+  mfaEnabled    Boolean        @default(false)
+  createdAt     DateTime       @default(now())
+  loginAttempts LoginAttempt[]
+  orders        Order[]
+  otpCodes      OtpCode[]
+  reviews       Review[]
+  reviewLikes   ReviewLike[]
+  wishlistItems WishlistItem[]
+}
+
+model Category {
+  id            Int           @id @default(autoincrement())
+  name          String
+  subcategories Subcategory[]
+}
+
+model Subcategory {
+  id         Int       @id @default(autoincrement())
+  name       String
+  categoryId Int
+  products   Product[]
+  category   Category  @relation(fields: [categoryId], references: [id])
+}
+
+model Product {
+  id            Int            @id @default(autoincrement())
+  name          String
+  price         Float
+  stock         Int
+  imageUrl      String?
+  subcategoryId Int
+  orderItems    OrderItem[]
+  subcategory   Subcategory    @relation(fields: [subcategoryId], references: [id])
+  reviews       Review[]
+   recipeIngredients RecipeIngredient[]
+  wishlistItems WishlistItem[]
+}
+
+model Order {
+  id               Int             @id @default(autoincrement())
+  userId           Int
+  total            Float
+  coinsEarned      Int             @default(0)
+  createdAt        DateTime        @default(now())
+  deliveryFee      Float           @default(0)
+  deliveryOptionId Int?
+  deliveryOption   DeliveryOption? @relation(fields: [deliveryOptionId], references: [id])
+  user             User            @relation(fields: [userId], references: [id])
+  items            OrderItem[]
+}
+
+model OrderItem {
+  id        Int     @id @default(autoincrement())
+  orderId   Int
+  productId Int
+  quantity  Int
+  price     Float
+  order     Order   @relation(fields: [orderId], references: [id])
+  product   Product @relation(fields: [productId], references: [id])
+}
+
+model WishlistItem {
+  id        Int      @id @default(autoincrement())
+  userId    Int
+  productId Int
+  addedAt   DateTime @default(now())
+  product   Product  @relation(fields: [productId], references: [id], onDelete: Cascade)
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@unique([userId, productId])
+  @@index([userId])
+  @@index([productId])
+}
+
+model DeliveryOption {
+  id          Int     @id @default(autoincrement())
+  name        String
+  fee         Float
+  estimated   String
+  description String?
+  orders      Order[]
+}
+
+model Review {
+  id        Int          @id @default(autoincrement())
+  rating    Int
+  comment   String
+  userId    Int
+  productId Int
+  createdAt DateTime     @default(now())
+  updatedAt DateTime     @updatedAt
+  product   Product      @relation(fields: [productId], references: [id], onDelete: Cascade)
+  user      User         @relation(fields: [userId], references: [id], onDelete: Cascade)
+  likes     ReviewLike[]
+
+  @@unique([userId, productId])
+  @@index([productId])
+  @@index([userId])
+}
+
+model ReviewLike {
+  id        Int      @id @default(autoincrement())
+  userId    Int
+  reviewId  Int
+  createdAt DateTime @default(now())
+  review    Review   @relation(fields: [reviewId], references: [id], onDelete: Cascade)
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@unique([userId, reviewId])
+  @@index([reviewId])
+}
+
+model OtpCode {
+  id              Int      @id @default(autoincrement())
+  userId          Int
+  code            String
+  type            OtpType
+  expiresAt       DateTime
+  used            Boolean  @default(false)
+  createdAt       DateTime @default(now())
+  pendingUserData String?  // For storing signup data during email verification
+  user            User?    @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@index([userId, type])
+  @@index([expiresAt])
+  @@index([code])
+}
+
+model LoginAttempt {
+  id            Int      @id @default(autoincrement())
+  userId        Int?
+  email         String
+  ipAddress     String?
+  userAgent     String?
+  success       Boolean
+  failureReason String?
+  createdAt     DateTime @default(now())
+  user          User?    @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@index([email, createdAt])
+  @@index([ipAddress])
+}
+
+enum OtpType {
+  EMAIL_VERIFICATION
+  PASSWORD_RESET
+  MFA_LOGIN
+}
+
+model Recipe {
+  id          Int                @id @default(autoincrement())
+  name        String
+  description String?
+  servings    Int                @default(1)
+  prepTime    Int?               // minutes
+  cookTime    Int?               // minutes
+  imageUrl    String?
+  createdAt   DateTime           @default(now())
+  updatedAt   DateTime           @updatedAt
+  
+  ingredients RecipeIngredient[]
+}
+
+model RecipeIngredient {
+  id         Int     @id @default(autoincrement())
+  recipeId   Int
+  productId  Int
+  quantity   Float   // quantity per serving
+  unit       String  // g, ml, pcs, cups, etc.
+  
+  recipe     Recipe  @relation(fields: [recipeId], references: [id], onDelete: Cascade)
+  product    Product @relation(fields: [productId], references: [id])
+  
+  @@index([recipeId])
+  @@index([productId])
+}
