@@ -1,0 +1,234 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Products – QuickMart</title>
+  <link rel="stylesheet" href="styles.css">
+</head>
+
+<body>
+
+<!-- ================= HEADER ================= -->
+<header>
+  <div class="header-container">
+    <a href="/index.html" class="logo">QuickMart</a>
+    <nav>
+      <ul>
+        <li><a href="/index.html">Home</a></li>
+        <li class="active"><a href="/products.html">Products</a></li>
+        <li>
+          <a href="/wishlist.html" class="icon-link">
+            <svg fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z"></path>
+            </svg>
+            Wishlist
+            <span class="icon-badge" id="wishlistCount">0</span>
+          </a>
+        </li>
+        <li>
+          <a href="/cart.html" class="icon-link">
+            <svg fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                d="M3 3h2l.4 2M7 13h10l4-8H5.4M7 13L5.4 5M7 13l-2.293 2.293c-.63.63-.184 1.707.707 1.707H17m0 0a2 2 0 100 4 2 2 0 000-4zm-8 2a2 2 0 11-4 0 2 2 0 014 0z"></path>
+            </svg>
+            Cart
+            <span class="icon-badge" id="cartCount">0</span>
+          </a>
+        </li>
+            <li >
+            <a href="/orderTracking.html" class="icon-link">
+              My Orders <span class="icon-badge" id="ordersCount" style="display:none;">0</span>
+            </a>
+          </li>
+
+
+        <!-- Auth-aware navigation -->
+        <li id="profileLink" style="display:none;"><a href="/profile.html">Profile</a></li>
+        <li id="loginLink"><a href="/login.html">Login</a></li>
+        <li id="signupLink"><a href="/signup.html">Sign up</a></li>
+        <li><span id="userGreeting" style="display:none;"></span></li>
+        <li id="logoutContainer" style="display:none;">
+          <button id="logoutBtn" class="btn btn-secondary">Logout</button>
+        </li>
+      </ul>
+    </nav>
+  </div>
+</header>
+
+<!-- ================= CATEGORY BAR ================= -->
+<div class="category-bar">
+  <ul class="category-menu">
+
+    <li class="category-item">
+      <span>Fresh Produce ▾</span>
+      <ul class="subcategory-menu">
+        <li><a href="#">Fruits</a></li>
+        <li><a href="#">Vegetables</a></li>
+        <li><a href="#">Herbs</a></li>
+      </ul>
+    </li>
+
+    <li class="category-item">
+      <span>Dairy & Eggs ▾</span>
+      <ul class="subcategory-menu">
+        <li><a href="#">Milk</a></li>
+        <li><a href="#">Cheese</a></li>
+        <li><a href="#">Yogurt</a></li>
+        <li><a href="#">Eggs</a></li>
+      </ul>
+    </li>
+
+    <li class="category-item">
+      <span>Meat & Seafood ▾</span>
+      <ul class="subcategory-menu">
+        <li><a href="#">Chicken</a></li>
+        <li><a href="#">Beef</a></li>
+        <li><a href="#">Pork</a></li>
+        <li><a href="#">Fish</a></li>
+        <li><a href="#">Shellfish</a></li>
+      </ul>
+    </li>
+
+    <li class="category-item">
+      <span>Frozen Meat & Seafood ▾</span>
+      <ul class="subcategory-menu">
+        <li><a href="#">Frozen Chicken</a></li>
+        <li><a href="#">Frozen Fish</a></li>
+        <li><a href="#">Frozen Seafood</a></li>
+      </ul>
+    </li>
+
+    <li class="category-item">
+      <span>Snacks ▾</span>
+      <ul class="subcategory-menu">
+        <li><a href="#">Chips</a></li>
+        <li><a href="#">Biscuits</a></li>
+        <li><a href="#">Nuts</a></li>
+        <li><a href="#">Chocolate</a></li>
+      </ul>
+    </li>
+
+    <li class="category-item">
+      <span>Beverages ▾</span>
+      <ul class="subcategory-menu">
+        <li><a href="#">Soft Drinks</a></li>
+        <li><a href="#">Juices</a></li>
+        <li><a href="#">Coffee</a></li>
+        <li><a href="#">Tea</a></li>
+      </ul>
+    </li>
+
+    <li class="category-item">
+      <span>Pantry Staples ▾</span>
+      <ul class="subcategory-menu">
+        <li><a href="#">Rice</a></li>
+        <li><a href="#">Pasta</a></li>
+        <li><a href="#">Cooking Oil</a></li>
+        <li><a href="#">Sauces</a></li>
+      </ul>
+    </li>
+
+    <li class="category-item">
+      <span>Household Essentials ▾</span>
+      <ul class="subcategory-menu">
+        <li><a href="#">Cleaning Supplies</a></li>
+        <li><a href="#">Laundry</a></li>
+        <li><a href="#">Paper Products</a></li>
+      </ul>
+    </li>
+
+  </ul>
+</div>
+
+<!-- ================= PRODUCT LIST ================= -->
+<section class="container">
+  <h2 class="section-title">Our Products</h2>
+
+<!-- ================= SEARCH & FILTER BAR ================= -->
+<div class="product-filters">
+
+  <input
+    type="text"
+    id="searchInput"
+    placeholder="Search products (e.g. apple)"
+  />
+
+  <select id="sortSelect">
+    <option value="newest">Newest</option>
+    <option value="price_asc">Price: Low → High</option>
+    <option value="price_desc">Price: High → Low</option>
+    <option value="name_asc">Name: A → Z</option>
+    <option value="name_desc">Name: Z → A</option>
+  </select>
+
+  <input
+  type="number"
+  id="minPrice"
+  placeholder="Min $"
+  min="0"
+  step="1"
+/>
+
+<input
+  type="number"
+  id="maxPrice"
+  placeholder="Max $"
+  min="0"
+  step="1"
+/>
+
+  <label>
+    <input type="checkbox" id="inStockOnly" />
+    In stock
+  </label>
+
+  <button id="applyFiltersBtn" class="btn">Apply</button>
+
+</div>
+
+
+
+
+
+
+
+
+  <!-- This is where the products will auto-load -->
+  <div id="products-container" class="product-grid"></div>
+</section>
+
+<!--pagination-->
+<div id="pagination" class="pagination" style="display:none;">
+  <button id="prevPageBtn">Prev</button>
+  <span id="pageInfo"></span>
+  <button id="nextPageBtn">Next</button>
+</div>
+
+
+<!-- ================= FOOTER ================= -->
+<footer>
+  <div class="footer-container">
+    <a href="/index.html" class="logo">QuickMart</a>
+    <nav>
+      <ul>
+        <li><a href="/index.html">Home</a></li>
+        <li><a href="/products.html">Products</a></li>
+        <li><a href="#">About Us</a></li>
+      </ul>
+    </nav>
+    <div class="copyright">
+      &copy; Amigas 2025. All rights reserved.
+    </div>
+  </div>
+</footer>
+
+<!-- ================= SCRIPTS ================= -->
+<script src="auth-utils.js"></script>
+<script src="wishlist.js"></script>
+<script src="products.js"></script>
+
+
+</body>
+</html>

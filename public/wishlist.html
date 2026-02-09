@@ -1,0 +1,511 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Wishlist - QuickMart</title>
+  <link rel="stylesheet" href="styles.css">
+  
+  <style>
+    .wishlist-wrapper {
+      width: 90%;
+      max-width: 1300px;
+      margin: 40px auto;
+    }
+
+    .wishlist-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding-bottom: 20px;
+      border-bottom: 3px solid #4CAF50;
+      margin-bottom: 30px;
+      position: relative;
+    }
+
+    .wishlist-header h1 {
+      color: #2d5016;
+      font-size: 2.2rem;
+      margin: 0;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+
+    .wishlist-count {
+      background: #4CAF50;
+      color: white;
+      padding: 5px 15px;
+      border-radius: 20px;
+      font-size: 1rem;
+      font-weight: 600;
+    }
+
+    .header-actions {
+      display: flex;
+      gap: 10px;
+      align-items: center;
+    }
+
+    .share-btn {
+      background: linear-gradient(135deg, #2196F3 0%, #1976D2 100%);
+      color: white;
+      border: none;
+      padding: 12px 24px;
+      border-radius: 8px;
+      font-weight: 600;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      transition: all 0.3s;
+      box-shadow: 0 3px 10px rgba(33, 150, 243, 0.3);
+    }
+
+    .share-btn:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 5px 15px rgba(33, 150, 243, 0.4);
+    }
+
+    .share-btn svg {
+      width: 18px;
+      height: 18px;
+    }
+
+    .three-dot-menu {
+      position: relative;
+    }
+
+    .three-dot-btn {
+      background: none;
+      border: none;
+      cursor: pointer;
+      padding: 10px;
+      display: flex;
+      flex-direction: column;
+      gap: 4px;
+      align-items: center;
+      justify-content: center;
+      width: 40px;
+      height: 40px;
+      border-radius: 8px;
+      transition: background 0.3s;
+    }
+
+    .three-dot-btn:hover {
+      background: rgba(76, 175, 80, 0.1);
+    }
+
+    .three-dot-btn span {
+      width: 5px;
+      height: 5px;
+      background: #2d5016;
+      border-radius: 50%;
+    }
+
+    .dropdown-menu {
+      display: none;
+      position: absolute;
+      top: 50px;
+      right: 0;
+      background: white;
+      border: 1px solid #ddd;
+      border-radius: 8px;
+      box-shadow: 0 4px 15px rgba(0,0,0,0.15);
+      min-width: 180px;
+      z-index: 1000;
+    }
+
+    .dropdown-menu.show {
+      display: block;
+      animation: fadeIn 0.2s ease-out;
+    }
+
+    @keyframes fadeIn {
+      from {
+        opacity: 0;
+        transform: translateY(-10px);
+      }
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+
+    .dropdown-menu button {
+      width: 100%;
+      padding: 12px 20px;
+      border: none;
+      background: none;
+      text-align: left;
+      cursor: pointer;
+      font-size: 1rem;
+      color: #333;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      transition: background 0.2s;
+    }
+
+    .dropdown-menu button:hover {
+      background: #f5f5f5;
+    }
+
+    .dropdown-menu button:first-child {
+      border-radius: 8px 8px 0 0;
+    }
+
+    .dropdown-menu button:last-child {
+      border-radius: 0 0 8px 8px;
+    }
+
+    .dropdown-menu button svg {
+      width: 18px;
+      height: 18px;
+    }
+
+    .wishlist-subtitle {
+      color: #666;
+      font-size: 1.1rem;
+      margin-top: 10px;
+    }
+
+    .wishlist-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+      gap: 30px;
+      margin-top: 30px;
+    }
+
+    .wishlist-card {
+      background: white;
+      border-radius: 15px;
+      padding: 20px;
+      text-align: center;
+      box-shadow: 0 4px 15px rgba(0,0,0,0.08);
+      transition: all 0.3s;
+      position: relative;
+    }
+
+    .wishlist-card:hover {
+      transform: translateY(-8px);
+      box-shadow: 0 8px 25px rgba(0,0,0,0.12);
+    }
+
+    .wishlist-card .product-image {
+      width: 140px;
+      height: 140px;
+      object-fit: cover;
+      margin: 0 auto 15px;
+      border-radius: 10px;
+    }
+
+    .wishlist-card .product-name {
+      font-size: 1.1rem;
+      color: #333;
+      margin-bottom: 10px;
+      font-weight: 600;
+    }
+
+    .wishlist-card .product-price {
+      font-size: 1.4rem;
+      color: #4CAF50;
+      font-weight: 700;
+      margin-bottom: 15px;
+    }
+
+    .remove-from-wishlist {
+      position: absolute;
+      top: 15px;
+      right: 15px;
+      background: #ff4444;
+      border: none;
+      color: white;
+      width: 35px;
+      height: 35px;
+      border-radius: 50%;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      transition: all 0.3s;
+      box-shadow: 0 2px 8px rgba(255, 68, 68, 0.3);
+    }
+
+    .remove-from-wishlist:hover {
+      background: #cc0000;
+      transform: scale(1.1);
+    }
+
+    .wishlist-actions {
+      display: flex;
+      gap: 10px;
+      margin-top: 15px;
+    }
+
+    .wishlist-actions button {
+      flex: 1;
+      padding: 10px;
+      border: none;
+      border-radius: 8px;
+      font-weight: 600;
+      cursor: pointer;
+      transition: all 0.3s;
+    }
+
+    .add-to-cart-btn {
+      background: linear-gradient(135deg, #4CAF50 0%, #45a049 100%);
+      color: white;
+      box-shadow: 0 3px 10px rgba(76, 175, 80, 0.3);
+    }
+
+    .add-to-cart-btn:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 5px 15px rgba(76, 175, 80, 0.4);
+    }
+
+    .empty-wishlist {
+      text-align: center;
+      padding: 80px 20px;
+    }
+
+    .empty-wishlist svg {
+      width: 100px;
+      height: 100px;
+      color: #ccc;
+      margin-bottom: 20px;
+    }
+
+    .empty-wishlist h2 {
+      color: #666;
+      font-size: 1.8rem;
+      margin-bottom: 15px;
+    }
+
+    .empty-wishlist p {
+      color: #999;
+      font-size: 1.1rem;
+      margin-bottom: 30px;
+    }
+
+    .empty-wishlist .btn {
+      padding: 15px 40px;
+      font-size: 1.1rem;
+    }
+
+    .modal-overlay {
+      display: none;
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: rgba(0, 0, 0, 0.5);
+      z-index: 9999;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .modal-overlay.show {
+      display: flex;
+    }
+
+    .modal-content {
+      background: white;
+      border-radius: 15px;
+      padding: 30px;
+      max-width: 400px;
+      width: 90%;
+      text-align: center;
+      box-shadow: 0 10px 40px rgba(0,0,0,0.3);
+      animation: modalFadeIn 0.3s ease-out;
+    }
+
+    @keyframes modalFadeIn {
+      from {
+        opacity: 0;
+        transform: scale(0.9);
+      }
+      to {
+        opacity: 1;
+        transform: scale(1);
+      }
+    }
+
+    .modal-content h3 {
+      color: #2d5016;
+      font-size: 1.5rem;
+      margin-bottom: 15px;
+    }
+
+    .modal-content p {
+      color: #666;
+      font-size: 1rem;
+      margin-bottom: 25px;
+    }
+
+    .modal-actions {
+      display: flex;
+      gap: 15px;
+      justify-content: center;
+    }
+
+    .modal-actions button {
+      padding: 12px 30px;
+      border: none;
+      border-radius: 8px;
+      font-weight: 600;
+      cursor: pointer;
+      font-size: 1rem;
+      transition: all 0.3s;
+    }
+
+    .modal-cancel {
+      background: #e0e0e0;
+      color: #333;
+    }
+
+    .modal-cancel:hover {
+      background: #d0d0d0;
+    }
+
+    .modal-confirm {
+      background: #ff4444;
+      color: white;
+    }
+
+    .modal-confirm:hover {
+      background: #cc0000;
+      transform: translateY(-2px);
+    }
+  </style>
+</head>
+
+<body>
+
+  <!-- NAVBAR -->
+  <header>
+    <div class="header-container">
+      <a href="/index.html" class="logo">QuickMart</a>
+      <nav>
+        <ul>
+          <li><a href="/index.html">Home</a></li>
+          <li><a href="/products.html">Products</a></li>
+          <li class="active">
+            <a href="/wishlist.html" class="icon-link">
+              <svg fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                  d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z"></path>
+              </svg>
+              Wishlist
+              <span class="icon-badge" id="wishlistCount">0</span>
+            </a>
+          </li>
+          <li>
+            <a href="/cart.html" class="icon-link">
+              <svg fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                  d="M3 3h2l.4 2M7 13h10l4-8H5.4M7 13L5.4 5M7 13l-2.293 2.293c-.63.63-.184 1.707.707 1.707H17m0 0a2 2 0 100 4 2 2 0 000-4zm-8 2a2 2 0 11-4 0 2 2 0 014 0z"></path>
+              </svg>
+              Cart
+              <span class="icon-badge" id="cartCount">0</span>
+            </a>
+          </li>
+              <li >
+            <a href="/orderTracking.html" class="icon-link">
+              My Orders <span class="icon-badge" id="ordersCount" style="display:none;">0</span>
+            </a>
+          </li>
+
+
+          <!-- Auth-aware navigation -->
+          <li id="profileLink" style="display:none;"><a href="/profile.html">Profile</a></li>
+          <li id="loginLink"><a href="/login.html">Login</a></li>
+          <li id="signupLink"><a href="/signup.html">Sign up</a></li>
+          <li><span id="userGreeting" style="display:none;"></span></li>
+          <li id="logoutContainer" style="display:none;">
+            <button id="logoutBtn" class="btn btn-secondary">Logout</button>
+          </li>
+        </ul>
+      </nav>
+    </div>
+  </header>
+
+  <div class="wishlist-wrapper">
+    <div class="wishlist-header">
+      <div>
+        <h1>
+          My Wishlist
+          <span class="wishlist-count" id="wishlistCountHeader">0</span>
+        </h1>
+        <p class="wishlist-subtitle">Save your favorite items for later</p>
+      </div>
+        
+        <div class="three-dot-menu">
+          <button class="three-dot-btn" id="menuBtn" aria-label="Menu">
+            <span></span>
+            <span></span>
+            <span></span>
+          </button>
+          <div class="dropdown-menu" id="dropdownMenu">
+            <button id="clearListBtn">
+              <svg fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"/>
+              </svg>
+              Clear List
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Empty State -->
+    <div id="emptyWishlist" class="empty-wishlist" style="display: none;">
+      <svg fill="none" stroke="currentColor" viewBox="0 0 24 24">
+        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+          d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z"></path>
+      </svg>
+      <h2>Your wishlist is empty</h2>
+      <p>Start adding products you love!</p>
+      <a href="/products.html" class="btn btn-primary">Browse Products</a>
+    </div>
+
+    <!-- Wishlist Grid -->
+    <div id="wishlistGrid" class="wishlist-grid"></div>
+  </div>
+
+  <!-- Confirmation Modal -->
+  <div class="modal-overlay" id="confirmModal">
+    <div class="modal-content">
+      <h3>Clear Wishlist?</h3>
+      <p>Are you sure you want to remove all items from your wishlist? This action cannot be undone.</p>
+      <div class="modal-actions">
+        <button class="modal-cancel" id="cancelBtn">Cancel</button>
+        <button class="modal-confirm" id="confirmBtn">Clear All</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- FOOTER -->
+  <footer>
+    <div class="footer-container">
+      <a href="/index.html" class="logo">QuickMart</a>
+      <nav>
+        <ul>
+          <li><a href="/index.html">Home</a></li>
+          <li><a href="/products.html">Products</a></li>
+          <li><a href="#">About Us</a></li>
+        </ul>
+      </nav>
+      <div class="copyright">
+        &copy; Amigas 2025. All rights reserved.
+      </div>
+    </div>
+  </footer>
+
+  <script src="auth-utils.js"></script>
+  <script src="wishlist.js"></script>
+  <script src="index.js"></script>
+
+</body>
+</html>

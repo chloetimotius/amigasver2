@@ -1,0 +1,171 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>MFA Demo - QuickMart</title>
+    <link rel="stylesheet" href="styles.css">
+    <style>
+        body { font-family: Arial, sans-serif; background: #f5f5f5; }
+        .demo-container { max-width: 1200px; margin: 20px auto; padding: 20px; }
+        .demo-section { background: white; margin: 20px 0; padding: 30px; border-radius: 8px; box-shadow: 0 2px 8px rgba(0,0,0,0.1); }
+        .mfa-status { display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px; }
+        .status-dot { width: 12px; height: 12px; border-radius: 50%; margin-right: 10px; }
+        .status-dot.enabled { background: #28a745; }
+        .status-dot.disabled { background: #dc3545; }
+        .btn { padding: 10px 20px; border: none; border-radius: 5px; cursor: pointer; }
+        .btn-primary { background: #007bff; color: white; }
+        .btn-danger { background: #dc3545; color: white; }
+        .btn-success { background: #28a745; color: white; }
+        .otp-input { font-size: 24px; text-align: center; letter-spacing: 10px; padding: 15px; border: 2px solid #ddd; border-radius: 5px; width: 100%; margin: 20px 0; }
+        .demo-log { background: #f8f9fa; border: 1px solid #ddd; padding: 15px; border-radius: 5px; font-family: monospace; max-height: 200px; overflow-y: auto; }
+    </style>
+</head>
+<body>
+    <div class="demo-container">
+        <h1>🔐 Multi-Factor Authentication Demo</h1>
+        <p><strong>Note:</strong> This is a frontend demo. The OTP codes are generated locally for demonstration.</p>
+
+        <!-- MFA Status Section -->
+        <div class="demo-section">
+            <h2>MFA Status Control</h2>
+            <div class="mfa-status">
+                <div>
+                    <span class="status-dot" id="statusDot"></span>
+                    <span id="statusText">MFA is currently disabled</span>
+                </div>
+                <button id="toggleMFA" class="btn btn-primary">Enable MFA</button>
+            </div>
+            <div id="mfaDisableForm" style="display: none;">
+                <h3>Disable MFA</h3>
+                <input type="password" placeholder="Enter password to disable MFA" id="disablePassword">
+                <button onclick="disableMFA()" class="btn btn-danger">Confirm Disable</button>
+                <button onclick="cancelDisable()" class="btn">Cancel</button>
+            </div>
+        </div>
+
+        <!-- OTP Testing Section -->
+        <div class="demo-section">
+            <h2>OTP Verification Test</h2>
+            <button onclick="generateOTP()" class="btn btn-success">Generate Test OTP</button>
+            <div style="margin: 20px 0;">
+                <input type="text" id="otpInput" class="otp-input" placeholder="Enter 6-digit code" maxlength="6">
+                <button onclick="verifyOTP()" class="btn btn-primary">Verify OTP</button>
+            </div>
+            <div id="otpResult"></div>
+        </div>
+
+        <!-- Demo Log -->
+        <div class="demo-section">
+            <h2>Demo Activity Log</h2>
+            <div id="demoLog" class="demo-log">
+                <div>Demo started - MFA system ready for testing</div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        let mfaEnabled = false;
+        let currentOTP = null;
+
+        // Toggle MFA
+        function toggleMFA() {
+            const btn = document.getElementById('toggleMFA');
+            const statusDot = document.getElementById('statusDot');
+            const statusText = document.getElementById('statusText');
+            const disableForm = document.getElementById('mfaDisableForm');
+
+            if (!mfaEnabled) {
+                // Enable MFA
+                mfaEnabled = true;
+                statusDot.className = 'status-dot enabled';
+                statusText.textContent = 'MFA is currently enabled';
+                btn.textContent = 'Disable MFA';
+                btn.className = 'btn btn-danger';
+                logActivity('✅ MFA enabled successfully');
+            } else {
+                // Show disable form
+                disableForm.style.display = 'block';
+            }
+        }
+
+        // Disable MFA
+        function disableMFA() {
+            const password = document.getElementById('disablePassword').value;
+            if (!password) {
+                alert('Please enter your password');
+                return;
+            }
+
+            mfaEnabled = false;
+            const statusDot = document.getElementById('statusDot');
+            const statusText = document.getElementById('statusText');
+            const btn = document.getElementById('toggleMFA');
+            const disableForm = document.getElementById('mfaDisableForm');
+
+            statusDot.className = 'status-dot disabled';
+            statusText.textContent = 'MFA is currently disabled';
+            btn.textContent = 'Enable MFA';
+            btn.className = 'btn btn-primary';
+            disableForm.style.display = 'none';
+            document.getElementById('disablePassword').value = '';
+            
+            logActivity('❌ MFA disabled successfully');
+        }
+
+        // Cancel disable
+        function cancelDisable() {
+            document.getElementById('mfaDisableForm').style.display = 'none';
+            document.getElementById('disablePassword').value = '';
+            logActivity('↩️ MFA disable cancelled');
+        }
+
+        // Generate test OTP
+        function generateOTP() {
+            currentOTP = Math.floor(100000 + Math.random() * 900000).toString();
+            logActivity(`📧 OTP Generated: ${currentOTP} (expires in 10 minutes)`);
+            logActivity('📨 In real app: Email would be sent to user');
+        }
+
+        // Verify OTP
+        function verifyOTP() {
+            const input = document.getElementById('otpInput').value;
+            const result = document.getElementById('otpResult');
+
+            if (!currentOTP) {
+                result.innerHTML = '<div style="color: red;">❌ No OTP generated. Please generate one first.</div>';
+                return;
+            }
+
+            if (input === currentOTP) {
+                result.innerHTML = '<div style="color: green;">✅ OTP verified successfully!</div>';
+                logActivity('✅ OTP verification successful');
+                currentOTP = null; // Use OTP only once
+                document.getElementById('otpInput').value = '';
+            } else {
+                result.innerHTML = '<div style="color: red;">❌ Invalid OTP. Please try again.</div>';
+                logActivity('❌ OTP verification failed');
+            }
+        }
+
+        // Log activity
+        function logActivity(message) {
+            const log = document.getElementById('demoLog');
+            const time = new Date().toLocaleTimeString();
+            log.innerHTML += `<div>[${time}] ${message}</div>`;
+            log.scrollTop = log.scrollHeight;
+        }
+
+        // Auto-submit OTP when 6 digits entered
+        document.getElementById('otpInput').addEventListener('input', function() {
+            if (this.value.length === 6) {
+                setTimeout(verifyOTP, 500);
+            }
+        });
+
+        // Initialize
+        toggleMFA(); // Start with disabled state
+        toggleMFA(); // Reset to show disabled
+    </script>
+</body>
+</html>

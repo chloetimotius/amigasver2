@@ -1,0 +1,594 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Two-Factor Authentication Settings</title>
+    <link rel="stylesheet" href="styles.css">
+    <style>
+        .mfa-settings-container {
+            max-width: 600px;
+            margin: 30px auto;
+            padding: 30px;
+            background: white;
+            border-radius: 15px;
+            box-shadow: 0 5px 20px rgba(0, 0, 0, 0.1);
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+
+        .mfa-header {
+            text-align: center;
+            margin-bottom: 40px;
+            padding-bottom: 20px;
+            border-bottom: 2px solid #f8f9fa;
+        }
+
+        .mfa-icon {
+            font-size: 4rem;
+            margin-bottom: 15px;
+            display: block;
+        }
+
+        .mfa-title {
+            font-size: 1.8rem;
+            font-weight: 600;
+            color: #333;
+            margin-bottom: 10px;
+        }
+
+        .mfa-subtitle {
+            color: #666;
+            font-size: 1.1rem;
+            line-height: 1.5;
+        }
+
+        .mfa-status {
+            background: linear-gradient(135deg, #f8f9fa 0%, #e9ecef 100%);
+            border-radius: 12px;
+            padding: 25px;
+            margin: 30px 0;
+            text-align: center;
+            border: 2px solid transparent;
+            transition: all 0.3s ease;
+        }
+
+        .mfa-status.enabled {
+            background: linear-gradient(135deg, #d4edda 0%, #c3e6cb 100%);
+            border-color: #28a745;
+        }
+
+        .mfa-status.disabled {
+            background: linear-gradient(135deg, #f8d7da 0%, #f5c6cb 100%);
+            border-color: #dc3545;
+        }
+
+        .status-icon {
+            font-size: 3rem;
+            margin-bottom: 15px;
+            display: block;
+        }
+
+        .status-text {
+            font-size: 1.2rem;
+            font-weight: 600;
+            margin-bottom: 10px;
+        }
+
+        .status-description {
+            font-size: 1rem;
+            opacity: 0.9;
+        }
+
+        .mfa-enabled .status-text {
+            color: #155724;
+        }
+
+        .mfa-disabled .status-text {
+            color: #721c24;
+        }
+
+        .mfa-actions {
+            display: flex;
+            gap: 15px;
+            margin: 30px 0;
+        }
+
+        .btn {
+            flex: 1;
+            padding: 15px 20px;
+            border: none;
+            border-radius: 8px;
+            font-size: 1rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            text-align: center;
+        }
+
+        .btn-success {
+            background: linear-gradient(135deg, #28a745 0%, #34d058 100%);
+            color: white;
+        }
+
+        .btn-success:hover:not(:disabled) {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(40, 167, 69, 0.4);
+        }
+
+        .btn-danger {
+            background: linear-gradient(135deg, #dc3545 0%, #c82333 100%);
+            color: white;
+        }
+
+        .btn-danger:hover:not(:disabled) {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(220, 53, 69, 0.4);
+        }
+
+        .btn-secondary {
+            background: #6c757d;
+            color: white;
+        }
+
+        .btn-secondary:hover:not(:disabled) {
+            background: #5a6268;
+            transform: translateY(-2px);
+        }
+
+        .btn:disabled {
+            opacity: 0.6;
+            cursor: not-allowed;
+            transform: none !important;
+        }
+
+        .security-benefits {
+            background: #d1ecf1;
+            border: 1px solid #bee5eb;
+            border-radius: 10px;
+            padding: 25px;
+            margin: 30px 0;
+        }
+
+        .benefits-title {
+            color: #0c5460;
+            font-size: 1.2rem;
+            font-weight: 600;
+            margin-bottom: 15px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .benefits-list {
+            list-style: none;
+            padding: 0;
+            margin: 0;
+        }
+
+        .benefits-list li {
+            color: #0c5460;
+            padding: 8px 0;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .benefits-list li::before {
+            content: '✓';
+            background: #28a745;
+            color: white;
+            border-radius: 50%;
+            width: 20px;
+            height: 20px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: bold;
+            font-size: 0.8rem;
+        }
+
+        .disable-form {
+            display: none;
+            background: #f8f9fa;
+            border: 2px solid #dee2e6;
+            border-radius: 10px;
+            padding: 25px;
+            margin: 20px 0;
+        }
+
+        .disable-form.show {
+            display: block;
+            animation: fadeIn 0.3s ease;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .form-group {
+            margin-bottom: 20px;
+        }
+
+        .form-group label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: 600;
+            color: #333;
+        }
+
+        .form-group input {
+            width: 100%;
+            padding: 12px;
+            border: 2px solid #e0e0e0;
+            border-radius: 8px;
+            font-size: 1rem;
+            box-sizing: border-box;
+        }
+
+        .form-group input:focus {
+            border-color: #dc3545;
+            box-shadow: 0 0 0 3px rgba(220, 53, 69, 0.1);
+        }
+
+        .warning-box {
+            background: #fff3cd;
+            border: 1px solid #ffeaa7;
+            border-radius: 8px;
+            padding: 20px;
+            margin: 20px 0;
+            color: #856404;
+        }
+
+        .warning-box h4 {
+            margin: 0 0 10px;
+            color: #856404;
+        }
+
+        .error-message {
+            background: #f8d7da;
+            color: #721c24;
+            padding: 15px;
+            border-radius: 8px;
+            margin: 15px 0;
+            border: 1px solid #f5c6cb;
+        }
+
+        .success-message {
+            background: #d4edda;
+            color: #155724;
+            padding: 15px;
+            border-radius: 8px;
+            margin: 15px 0;
+            border: 1px solid #c3e6cb;
+        }
+
+        .loading {
+            display: inline-block;
+            width: 20px;
+            height: 20px;
+            border: 3px solid #f3f3f3;
+            border-top: 3px solid #667eea;
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+            margin-left: 10px;
+        }
+
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+
+        .back-button {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            color: #667eea;
+            text-decoration: none;
+            font-weight: 500;
+            margin-bottom: 20px;
+            transition: color 0.3s ease;
+        }
+
+        .back-button:hover {
+            color: #5a6fd8;
+        }
+
+        @media (max-width: 768px) {
+            .mfa-actions {
+                flex-direction: column;
+            }
+            
+            .mfa-settings-container {
+                margin: 20px;
+                padding: 20px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="mfa-settings-container">
+        
+        <!-- Back to Profile Link -->
+        <a href="profile.html" class="back-button">
+            ← Back to Profile
+        </a>
+
+        <!-- Header -->
+        <div class="mfa-header">
+            <span class="mfa-icon">🛡️</span>
+            <h1 class="mfa-title">Two-Factor Authentication</h1>
+            <p class="mfa-subtitle">Add an extra layer of security to your account</p>
+        </div>
+
+        <!-- MFA Status Display -->
+        <div id="mfa-status" class="mfa-status">
+            <span class="status-icon" id="status-icon">⏳</span>
+            <div class="status-text" id="status-text">Loading...</div>
+            <div class="status-description" id="status-description">Checking your MFA settings</div>
+        </div>
+
+        <!-- Action Buttons -->
+        <div class="mfa-actions">
+            <button id="enable-mfa" class="btn btn-success" style="display: none;">
+                Enable 2FA
+            </button>
+            <button id="disable-mfa" class="btn btn-danger" style="display: none;">
+                Disable 2FA
+            </button>
+            <button id="test-mfa" class="btn btn-secondary" style="display: none;">
+                Test Login
+            </button>
+        </div>
+
+        <!-- Disable MFA Form -->
+        <div id="disable-form" class="disable-form">
+            <div class="warning-box">
+                <h4>⚠️ Security Warning</h4>
+                <p>Disabling two-factor authentication will make your account less secure. Enter your current password to confirm this action.</p>
+            </div>
+            
+            <form id="disable-mfa-form">
+                <div class="form-group">
+                    <label for="current-password">Current Password</label>
+                    <input type="password" id="current-password" name="currentPassword" 
+                           placeholder="Enter your current password" required>
+                </div>
+                
+                <div style="display: flex; gap: 15px;">
+                    <button type="submit" class="btn btn-danger">
+                        Confirm Disable
+                    </button>
+                    <button type="button" id="cancel-disable" class="btn btn-secondary">
+                        Cancel
+                    </button>
+                </div>
+            </form>
+        </div>
+
+        <!-- Security Benefits -->
+        <div class="security-benefits">
+            <h3 class="benefits-title">
+                <span>🔐</span>
+                Why Enable Two-Factor Authentication?
+            </h3>
+            <ul class="benefits-list">
+                <li>Protects your account even if your password is compromised</li>
+                <li>Prevents unauthorized access from unknown devices</li>
+                <li>Receives instant email verification codes</li>
+                <li>Industry-standard security practice</li>
+                <li>Takes less than a minute to set up</li>
+                <li>Can be easily disabled if needed</li>
+            </ul>
+        </div>
+
+        <!-- Messages -->
+        <div id="message-container"></div>
+    </div>
+
+    <script>
+        // MFA Settings Management
+        let mfaEnabled = false;
+        let loading = false;
+
+        // Elements
+        const statusDiv = document.getElementById('mfa-status');
+        const statusIcon = document.getElementById('status-icon');
+        const statusText = document.getElementById('status-text');
+        const statusDescription = document.getElementById('status-description');
+        
+        const enableBtn = document.getElementById('enable-mfa');
+        const disableBtn = document.getElementById('disable-mfa');
+        const testBtn = document.getElementById('test-mfa');
+        
+        const disableForm = document.getElementById('disable-form');
+        const disableMfaForm = document.getElementById('disable-mfa-form');
+        const cancelDisableBtn = document.getElementById('cancel-disable');
+
+        // Initialize
+        document.addEventListener('DOMContentLoaded', function() {
+            loadMFAStatus();
+            setupEventListeners();
+        });
+
+        function setupEventListeners() {
+            enableBtn.addEventListener('click', enableMFA);
+            disableBtn.addEventListener('click', showDisableForm);
+            testBtn.addEventListener('click', testMFA);
+            
+            disableMfaForm.addEventListener('submit', handleDisableMFA);
+            cancelDisableBtn.addEventListener('click', hideDisableForm);
+            
+            // Clear messages on input
+            document.getElementById('current-password').addEventListener('input', clearMessages);
+        }
+
+        // Load current MFA status
+        async function loadMFAStatus() {
+            try {
+                const response = await fetch('/auth/mfa/status');
+                const data = await response.json();
+
+                if (response.ok) {
+                    mfaEnabled = data.mfaEnabled;
+                    updateStatusDisplay();
+                } else {
+                    showMessage('Failed to load MFA status', 'error');
+                }
+            } catch (error) {
+                console.error('Error loading MFA status:', error);
+                showMessage('Network error. Please refresh the page.', 'error');
+            }
+        }
+
+        // Update the status display
+        function updateStatusDisplay() {
+            if (mfaEnabled) {
+                // MFA is enabled
+                statusDiv.className = 'mfa-status enabled';
+                statusIcon.textContent = '✅';
+                statusText.textContent = 'Two-Factor Authentication Enabled';
+                statusDescription.textContent = 'Your account is protected with email-based 2FA';
+                
+                enableBtn.style.display = 'none';
+                disableBtn.style.display = 'block';
+                testBtn.style.display = 'block';
+            } else {
+                // MFA is disabled
+                statusDiv.className = 'mfa-status disabled';
+                statusIcon.textContent = '🚫';
+                statusText.textContent = 'Two-Factor Authentication Disabled';
+                statusDescription.textContent = 'Your account security can be improved';
+                
+                enableBtn.style.display = 'block';
+                disableBtn.style.display = 'none';
+                testBtn.style.display = 'none';
+            }
+        }
+
+        // Enable MFA
+        async function enableMFA() {
+            if (loading) return;
+            
+            try {
+                loading = true;
+                showLoading(enableBtn, 'Enabling...');
+                
+                const response = await fetch('/auth/mfa/enable', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' }
+                });
+
+                const data = await response.json();
+
+                if (response.ok) {
+                    mfaEnabled = true;
+                    updateStatusDisplay();
+                    showMessage('Two-Factor Authentication enabled successfully! 🎉', 'success');
+                } else {
+                    showMessage(data.error || 'Failed to enable MFA', 'error');
+                }
+            } catch (error) {
+                console.error('Error enabling MFA:', error);
+                showMessage('Network error. Please try again.', 'error');
+            } finally {
+                loading = false;
+                hideLoading(enableBtn, 'Enable 2FA');
+            }
+        }
+
+        // Show disable form
+        function showDisableForm() {
+            disableForm.classList.add('show');
+            document.getElementById('current-password').focus();
+        }
+
+        // Hide disable form
+        function hideDisableForm() {
+            disableForm.classList.remove('show');
+            document.getElementById('current-password').value = '';
+            clearMessages();
+        }
+
+        // Handle disable MFA form submission
+        async function handleDisableMFA(event) {
+            event.preventDefault();
+            
+            if (loading) return;
+            
+            const currentPassword = document.getElementById('current-password').value;
+            
+            if (!currentPassword) {
+                showMessage('Please enter your current password', 'error');
+                return;
+            }
+
+            try {
+                loading = true;
+                const submitBtn = event.target.querySelector('button[type="submit"]');
+                showLoading(submitBtn, 'Disabling...');
+                
+                const response = await fetch('/auth/mfa/disable', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ currentPassword })
+                });
+
+                const data = await response.json();
+
+                if (response.ok) {
+                    mfaEnabled = false;
+                    updateStatusDisplay();
+                    hideDisableForm();
+                    showMessage('Two-Factor Authentication disabled', 'success');
+                } else {
+                    showMessage(data.error || 'Failed to disable MFA', 'error');
+                }
+            } catch (error) {
+                console.error('Error disabling MFA:', error);
+                showMessage('Network error. Please try again.', 'error');
+            } finally {
+                loading = false;
+                const submitBtn = event.target.querySelector('button[type="submit"]');
+                hideLoading(submitBtn, 'Confirm Disable');
+            }
+        }
+
+        // Test MFA by opening MFA login page
+        function testMFA() {
+            if (loading) return;
+            
+            showMessage('Opening MFA test login...', 'info');
+            window.open('mfa.html', '_blank');
+        }
+
+        // UI Helper Functions
+        function showMessage(message, type = 'info') {
+            const container = document.getElementById('message-container');
+            const className = type === 'error' ? 'error-message' : 
+                            type === 'success' ? 'success-message' : 'info-message';
+            
+            container.innerHTML = `<div class="${className}">${message}</div>`;
+            
+            // Auto-clear success/info messages
+            if (type !== 'error') {
+                setTimeout(clearMessages, 5000);
+            }
+        }
+
+        function clearMessages() {
+            document.getElementById('message-container').innerHTML = '';
+        }
+
+        function showLoading(button, text) {
+            button.disabled = true;
+            button.innerHTML = text + '<span class="loading"></span>';
+        }
+
+        function hideLoading(button, originalText) {
+            button.disabled = false;
+            button.innerHTML = originalText;
+        }
+    </script>
+</body>
+</html>

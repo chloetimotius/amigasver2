@@ -1,0 +1,530 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Product Details — QuickMart</title>
+  <link rel="stylesheet" href="styles.css">
+  <style>
+    /* Review Section Styles */
+    .reviews-section {
+      max-width: 1200px;
+      margin: 40px auto;
+      padding: 0 20px;
+    }
+
+    .reviews-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 30px;
+      border-bottom: 2px solid #eee;
+      padding-bottom: 15px;
+    }
+
+    .reviews-header h2 {
+      font-size: 28px;
+      color: #333;
+    }
+
+    .rating-summary {
+      display: flex;
+      align-items: center;
+      gap: 15px;
+    }
+
+    .average-rating {
+      font-size: 48px;
+      font-weight: bold;
+      color: #4CAF50;
+    }
+
+    .rating-details {
+      display: flex;
+      flex-direction: column;
+    }
+
+    .stars-display {
+      color: #FFD700;
+      font-size: 20px;
+    }
+
+    .total-reviews {
+      color: #666;
+      font-size: 14px;
+    }
+
+    /* Write Review Form */
+    .write-review-section {
+      background: #f9f9f9;
+      padding: 25px;
+      border-radius: 10px;
+      margin-bottom: 30px;
+    }
+
+    .review-form {
+      display: none;
+    }
+
+    .review-form.active {
+      display: block;
+    }
+
+    .write-review-btn {
+      background: #4CAF50;
+      color: white;
+      border: none;
+      padding: 12px 30px;
+      border-radius: 5px;
+      cursor: pointer;
+      font-size: 16px;
+      font-weight: 600;
+    }
+
+    .write-review-btn:hover {
+      background: #45a049;
+    }
+
+    .star-rating {
+      display: flex;
+      gap: 5px;
+      font-size: 32px;
+      margin: 15px 0;
+    }
+
+    .star {
+      cursor: pointer;
+      color: #ddd;
+      transition: color 0.2s;
+    }
+
+    .star.active,
+    .star:hover {
+      color: #FFD700;
+    }
+
+    .review-textarea {
+      width: 100%;
+      min-height: 120px;
+      padding: 15px;
+      border: 2px solid #ddd;
+      border-radius: 8px;
+      font-size: 16px;
+      font-family: inherit;
+      resize: vertical;
+    }
+
+    .review-textarea:focus {
+      outline: none;
+      border-color: #4CAF50;
+    }
+
+    .form-actions {
+      display: flex;
+      gap: 10px;
+      margin-top: 15px;
+    }
+
+    .submit-review-btn,
+    .cancel-review-btn {
+      padding: 10px 25px;
+      border: none;
+      border-radius: 5px;
+      cursor: pointer;
+      font-size: 16px;
+      font-weight: 600;
+    }
+
+    .submit-review-btn {
+      background: #4CAF50;
+      color: white;
+    }
+
+    .submit-review-btn:hover {
+      background: #45a049;
+    }
+
+    .cancel-review-btn {
+      background: #ddd;
+      color: #333;
+    }
+
+    .cancel-review-btn:hover {
+      background: #ccc;
+    }
+
+    /* Review List */
+    .reviews-list {
+      display: flex;
+      flex-direction: column;
+      gap: 20px;
+    }
+
+    .review-card {
+      background: white;
+      padding: 20px;
+      border-radius: 10px;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+    }
+
+    .review-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-start;
+      margin-bottom: 15px;
+    }
+
+    .reviewer-info {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+
+    .reviewer-avatar {
+      width: 50px;
+      height: 50px;
+      border-radius: 50%;
+      object-fit: cover;
+      background: #4CAF50;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: white;
+      font-weight: bold;
+      font-size: 20px;
+    }
+
+    .reviewer-avatar img {
+      width: 100%;
+      height: 100%;
+      border-radius: 50%;
+      object-fit: cover;
+    }
+
+    .reviewer-details {
+      display: flex;
+      flex-direction: column;
+    }
+
+    .reviewer-name {
+      font-weight: 600;
+      color: #333;
+      font-size: 16px;
+    }
+
+    .review-date {
+      color: #999;
+      font-size: 13px;
+    }
+
+    .review-rating {
+      color: #FFD700;
+      font-size: 18px;
+    }
+
+    .review-content {
+      color: #555;
+      line-height: 1.6;
+      margin-bottom: 15px;
+    }
+
+    .review-footer {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding-top: 15px;
+      border-top: 1px solid #eee;
+    }
+
+    .review-actions {
+      display: flex;
+      gap: 10px;
+    }
+
+    .review-action-btn {
+      background: none;
+      border: 1px solid #ddd;
+      padding: 6px 15px;
+      border-radius: 5px;
+      cursor: pointer;
+      font-size: 14px;
+      color: #666;
+      transition: all 0.2s;
+    }
+
+    .review-action-btn:hover {
+      background: #f5f5f5;
+      border-color: #999;
+    }
+
+    .edit-btn {
+      color: #4CAF50;
+      border-color: #4CAF50;
+    }
+
+    .edit-btn:hover {
+      background: #e8f5e9;
+    }
+
+    .delete-btn {
+      color: #f44336;
+      border-color: #f44336;
+    }
+
+    .delete-btn:hover {
+      background: #ffebee;
+    }
+
+    .like-btn {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      background: white;
+      border: 1px solid #ddd;
+      padding: 6px 15px;
+      border-radius: 5px;
+      cursor: pointer;
+      font-size: 14px;
+      color: #666;
+      transition: all 0.2s;
+    }
+
+    .like-btn:hover {
+      background: #f5f5f5;
+    }
+
+    .like-btn.liked {
+      background: #e3f2fd;
+      border-color: #2196F3;
+      color: #2196F3;
+    }
+
+    .like-icon {
+      font-size: 16px;
+    }
+
+    .no-reviews {
+      text-align: center;
+      padding: 40px;
+      color: #999;
+      font-size: 18px;
+    }
+
+    .login-prompt {
+      background: #fff3cd;
+      padding: 15px;
+      border-radius: 8px;
+      text-align: center;
+      margin-bottom: 20px;
+    }
+
+    .login-prompt a {
+      color: #4CAF50;
+      font-weight: 600;
+      text-decoration: none;
+    }
+
+    .login-prompt a:hover {
+      text-decoration: underline;
+    }
+
+    /* Edit Review Form */
+    .edit-review-form {
+      display: none;
+      margin-top: 15px;
+      padding: 15px;
+      background: #f9f9f9;
+      border-radius: 8px;
+    }
+
+    .edit-review-form.active {
+      display: block;
+    }
+    .similar-products-section {
+  max-width: 1200px;
+  margin: 60px auto;
+  padding: 0 20px;
+}
+
+.similar-products-section h2 {
+  margin-bottom: 20px;
+  font-size: 26px;
+  color: #333;
+}
+
+.similar-products-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+  gap: 20px;
+}
+
+.similar-product-card {
+  background: white;
+  border-radius: 12px;
+  padding: 15px;
+  box-shadow: 0 4px 12px rgba(0,0,0,.08);
+  cursor: pointer;
+  transition: transform .2s;
+}
+
+.similar-product-card:hover {
+  transform: translateY(-4px);
+}
+
+.similar-product-card img {
+  width: 100%;
+  height: 160px;
+  object-fit: cover;
+  border-radius: 8px;
+}
+
+.similar-product-card h4 {
+  margin: 10px 0 5px;
+  font-size: 16px;
+}
+
+.similar-product-card p {
+  color: #4CAF50;
+  font-weight: 600;
+}
+
+  </style>
+</head>
+
+<body>
+
+<!-- Header -->
+<header>
+        <div class="header-container">
+            <a href="/index.html" class="logo">QuickMart</a>
+            <nav>
+                <ul>
+                  
+                    <li><a href="/index.html">Home</a></li>
+                    <li class="active"><a href="/products.html">Products</a></li>
+                    <li>
+                        <a href="/wishlist.html" class="icon-link">
+                            <svg fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                      d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z"></path>
+                            </svg>
+                            Wishlist
+                            <span class="icon-badge" id="wishlistCount">0</span>
+                        </a>
+                    </li>
+                    <li>
+                        <a href="/cart.html" class="icon-link">
+                            <svg fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                      d="M3 3h2l.4 2M7 13h10l4-8H5.4M7 13L5.4 5M7 13l-2.293 2.293c-.63.63-.184 1.707.707 1.707H17m0 0a2 2 0 100 4 2 2 0 000-4zm-8 2a2 2 0 11-4 0 2 2 0 014 0z"></path>
+                            </svg>
+                            Cart
+                            <span class="icon-badge" id="cartCount">0</span>
+                        </a>
+                    </li>
+                        <li >
+            <a href="/orderTracking.html" class="icon-link">
+              My Orders <span class="icon-badge" id="ordersCount" style="display:none;">0</span>
+            </a>
+          </li>
+
+
+                    <!-- Auth-aware navigation -->
+                    <li id="profileLink" style="display:none;"><a href="/profile.html">Profile</a></li>
+                    <li id="loginLink"><a href="/login.html">Login</a></li>
+                    <li id="signupLink"><a href="/signup.html">Sign up</a></li>
+                    <li><span id="userGreeting" style="display:none;"></span></li>
+                    <li id="logoutContainer" style="display:none;">
+                        <button id="logoutBtn" class="btn btn-secondary">Logout</button>
+                    </li>
+                </ul>
+            </nav>
+        </div>
+    </header>
+<!-- MAIN PRODUCT DETAILS -->
+<section class="product-details-wrapper">
+  <div id="product-details-container" class="product-page no-wishlist-heart">
+    Loading product…
+  </div>
+</section>
+
+<!-- SIMILAR PRODUCTS -->
+<section class="similar-products-section">
+  <h2>You may also like</h2>
+  <div id="similarProductsContainer" class="similar-products-grid">
+    <!-- JS will inject cards here -->
+  </div>
+</section>
+
+<!-- REVIEWS SECTION -->
+<section class="reviews-section">
+  <div class="reviews-header">
+    <h2>Customer Reviews</h2>
+    <div class="rating-summary" id="ratingSummary">
+      <div class="average-rating">0.0</div>
+      <div class="rating-details">
+        <div class="stars-display">★★★★★</div>
+        <div class="total-reviews">0 reviews</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Write Review Section -->
+  <div class="write-review-section">
+    <div id="loginPrompt" class="login-prompt" style="display: none;">
+      Please <a href="/login.html">login</a> to write a review
+    </div>
+    
+    <button class="write-review-btn" id="writeReviewBtn" style="display: none;">
+      Write a Review
+    </button>
+
+    <div class="review-form" id="reviewForm">
+      <h3>Write Your Review</h3>
+      <div class="star-rating" id="starRating">
+        <span class="star" data-rating="1">★</span>
+        <span class="star" data-rating="2">★</span>
+        <span class="star" data-rating="3">★</span>
+        <span class="star" data-rating="4">★</span>
+        <span class="star" data-rating="5">★</span>
+      </div>
+      <textarea 
+        class="review-textarea" 
+        id="reviewComment" 
+        placeholder="Share your experience with this product (minimum 10 characters)"
+      ></textarea>
+      <div class="form-actions">
+        <button class="submit-review-btn" id="submitReviewBtn">Submit Review</button>
+        <button class="cancel-review-btn" id="cancelReviewBtn">Cancel</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Reviews List -->
+  <div class="reviews-list" id="reviewsList">
+    <div class="no-reviews">Loading reviews...</div>
+  </div>
+</section>
+
+<!-- FOOTER -->
+<footer>
+  <div class="footer-container">
+    <a href="/index.html" class="logo">QuickMart</a>
+    <nav>
+      <ul>
+        <li><a href="/index.html">Home</a></li>
+        <li><a href="/products.html">Products</a></li>
+        <li><a href="#">About Us</a></li>
+      </ul>
+    </nav>
+    <div class="copyright">
+      &copy; Amigas 2025. All rights reserved.
+    </div>
+  </div>
+</footer>
+
+<script src="auth-utils.js"></script>
+<script src="wishlist.js"></script>
+<script src="productDetails.js"></script>
+<script src="reviews.js"></script>
+</body>
+</html>

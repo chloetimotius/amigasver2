@@ -1,0 +1,321 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>QuickMart - Your Online Grocery Store</title>
+    <link rel="stylesheet" href="styles.css">
+    <style>
+        /* Hamburger Menu Styles */
+        .hamburger-menu {
+            position: relative;
+            margin-left: 15px;
+        }
+        
+        .hamburger-btn {
+            background: none;
+            border: none;
+            cursor: pointer;
+            padding: 8px;
+            display: flex;
+            flex-direction: column;
+            gap: 4px;
+            transition: 0.3s;
+        }
+        
+        .hamburger-btn span {
+            display: block;
+            width: 25px;
+            height: 3px;
+            background: #2d5016;
+            border-radius: 2px;
+            transition: 0.3s;
+        }
+        
+        .hamburger-btn:hover span {
+            background: #4CAF50;
+        }
+        
+        .hamburger-dropdown {
+            position: absolute;
+            top: 100%;
+            right: 0;
+            background: white;
+            border-radius: 12px;
+            box-shadow: 0 8px 30px rgba(0,0,0,0.15);
+            min-width: 220px;
+            opacity: 0;
+            visibility: hidden;
+            transform: translateY(-10px);
+            transition: all 0.3s ease;
+            z-index: 1000;
+            margin-top: 10px;
+        }
+        
+        .hamburger-dropdown.active {
+            opacity: 1;
+            visibility: visible;
+            transform: translateY(0);
+        }
+        
+        .hamburger-dropdown ul {
+            list-style: none;
+            padding: 10px 0;
+            margin: 0;
+        }
+        
+        .hamburger-dropdown li {
+            margin: 0;
+        }
+        
+        .hamburger-dropdown a {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            padding: 12px 20px;
+            color: #333;
+            text-decoration: none;
+            transition: 0.2s;
+            font-size: 15px;
+        }
+        
+        .hamburger-dropdown a:hover {
+            background: #f5f5f5;
+            color: #4CAF50;
+        }
+        
+        .hamburger-dropdown svg {
+            width: 20px;
+            height: 20px;
+        }
+    </style>
+</head>
+<body>
+    <!-- Header -->
+    <header>
+        <div class="header-container">
+            <a href="/index.html" class="logo">QuickMart</a>
+            <nav>
+                <ul>
+                    <li class="active"><a href="/index.html">Home</a></li>
+                    <li><a href="/products.html">Products</a></li>
+                    <li>
+                        <a href="/wishlist.html" class="icon-link">
+                            <svg fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                      d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z"></path>
+                            </svg>
+                            Wishlist
+                            <span class="icon-badge" id="wishlistCount">0</span>
+                        </a>
+                    </li>
+                    <li>
+                        <a href="/cart.html" class="icon-link">
+                            <svg fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                      d="M3 3h2l.4 2M7 13h10l4-8H5.4M7 13L5.4 5M7 13l-2.293 2.293c-.63.63-.184 1.707.707 1.707H17m0 0a2 2 0 100 4 2 2 0 000-4zm-8 2a2 2 0 11-4 0 2 2 0 014 0z"></path>
+                            </svg>
+                            Cart
+                            <span class="icon-badge" id="cartCount">0</span>
+                        </a>
+                    </li>
+                    <li>
+                        <a href="/orderTracking.html" class="icon-link">
+                            My Orders <span class="icon-badge" id="ordersCount" style="display:none;">0</span>
+                        </a>
+                    </li>
+
+                    <!-- Auth-aware navigation -->
+                    <li id="profileLink" style="display:none;"><a href="/profile.html">Profile</a></li>
+                    <li id="loginLink"><a href="/login.html">Login</a></li>
+                    <li id="signupLink"><a href="/signup.html">Sign up</a></li>
+                    <li><span id="userGreeting" style="display:none;"></span></li>
+                    <li id="logoutContainer" style="display:none;">
+                        <button id="logoutBtn" class="btn btn-secondary">Logout</button>
+                    </li>
+                    
+                    <!-- ✅ HAMBURGER MENU -->
+                    <li class="hamburger-menu">
+                        <button class="hamburger-btn" id="hamburgerBtn">
+                            <span></span>
+                            <span></span>
+                            <span></span>
+                        </button>
+                        <div class="hamburger-dropdown" id="hamburgerDropdown">
+                            <ul>
+                                <li>
+                                    <a href="/recipes.html">
+                                        <svg fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" 
+                                                  d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.747 0 3.332.477 4.5 1.253v13C19.832 18.477 18.247 18 16.5 18c-1.746 0-3.332.477-4.5 1.253"></path>
+                                        </svg>
+                                        Recipes
+                                    </a>
+                                </li>
+                                <li>
+                                    <a href="/order-history.html">
+                                        <svg fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" 
+                                                  d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2"></path>
+                                        </svg>
+                                        Order History
+                                    </a>
+                                </li>
+                                <li>
+                                    <a href="/admin-analytics.html">
+                                        <svg fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" 
+                                                  d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z"></path>
+                                        </svg>
+                                        Analytics
+                                    </a>
+                                </li>
+                            </ul>
+                        </div>
+                    </li>
+                </ul>
+            </nav>
+        </div>
+    </header>
+
+    <!-- Main Content -->
+    <div class="container">
+        <!-- Banner Carousel -->
+        <div class="banner-carousel">
+            <div class="carousel-container" id="carouselContainer">
+                <div class="fresh-banner banner-green">
+                    <div class="banner-content">
+                        <h2>Fresh Deals</h2>
+                        <p>UP TO 40% OFF today!</p>
+                        <button class="banner-btn" onclick="window.location.href='/products.html'">Shop Now</button>
+                    </div>
+                    <div class="banner-image">
+                        <img src="images/veggie.jpeg" alt="Grocery basket">
+                    </div>
+                </div>
+
+                <div class="fresh-banner banner-christmas">
+                    <div class="banner-content">
+                        <h2 style="color:white;">Christmas Specials</h2>
+                        <p style="color:#d8f8dc;">Festive Picks · Holiday Deals</p>
+                        <button class="banner-btn" onclick="window.location.href='/products.html'">Shop Now</button>
+                    </div>
+                    <div class="banner-image">
+                        <img src="images/banner.jpeg" alt="Christmas Banner">
+                    </div>
+                </div>
+            </div>
+
+            <div class="carousel-arrows">
+                <button class="carousel-arrow" onclick="previousSlide()">‹</button>
+                <button class="carousel-arrow" onclick="nextSlide()">›</button>
+            </div>
+
+            <div class="carousel-nav">
+                <span class="carousel-dot active" onclick="goToSlide(0)"></span>
+                <span class="carousel-dot" onclick="goToSlide(1)"></span>
+            </div>
+        </div>
+
+        <!-- Category Icons -->
+        <div class="categories">
+            <div class="category-item">
+                <div class="category-icon">
+                    <img src="https://images.unsplash.com/photo-1627989147125-a004d05946d3?q=80&w=880&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D" alt="Vegetables">
+                </div>
+                <span>Fresh Produce</span>
+            </div>
+            <div class="category-item">
+                <div class="category-icon">
+                    <img src="images/meatandsea.jpg" alt="Meat">
+                </div>
+                <span>Meat & Seafood</span>
+            </div>
+            <div class="category-item">
+                <div class="category-icon">
+                    <img src="images/dairy.jpg" alt="Dairy">
+                </div>
+                <span>Dairy & Eggs</span>
+            </div>
+            <div class="category-item">
+                <div class="category-icon">
+                    <img src="images/beverages.jpg" alt="Bakery">
+                </div>
+                <span>Beverages</span>
+            </div>
+            <div class="category-item">
+                <div class="category-icon">
+                    <img src="images/snacks.jpg" alt="snack">
+                </div>
+                <span>Snacks</span>
+            </div>
+            <div class="category-item">
+                <div class="category-icon">
+                    <img src="images/pantrystaples.jpg" alt="snack">
+                </div>
+                <span>Pantry Staples</span>
+            </div>
+            <div class="category-item">
+                <div class="category-icon">
+                    <img src="images/household.jpg" alt="snack">
+                </div>
+                <span>Household Essentials</span>
+            </div>
+        </div>
+
+        <h2 class="section-title">Recommended for You</h2>
+        <div class="product-grid" id="recommendedProducts"></div>
+
+        <h2 class="section-title">Flash Deals · Today's Specials</h2>
+        <div class="flash-deals">
+            <div class="timer-card">
+                <div class="deal-badge">1 FOR 1</div>
+                <div class="countdown" id="countdown">4:02:10</div>
+                <div class="timer-products" id="timerProducts"></div>
+                <div class="delivery-note">Order before 5 PM to get Free Delivery</div>
+            </div>
+        </div>
+
+        <h2 class="section-title">Quick Reorder</h2>
+        <div class="quick-reorder" id="quickReorder"></div>
+    </div>
+
+    <footer>
+        <div class="footer-container">
+            <a href="/index.html" class="logo">QuickMart</a>
+            <nav>
+                <ul>
+                    <li><a href="/index.html">Home</a></li>
+                    <li><a href="/products.html">Products</a></li>
+                    <li><a href="#">About Us</a></li>
+                </ul>
+            </nav>
+            <div class="copyright">
+                &copy; Amigas 2025. All rights reserved.
+            </div>
+        </div>
+    </footer>
+
+    <script src="auth-utils.js"></script>
+    <script src="wishlist.js"></script>
+    <script src="index.js"></script>
+    
+    <script>
+        // Hamburger menu toggle
+        const hamburgerBtn = document.getElementById('hamburgerBtn');
+        const hamburgerDropdown = document.getElementById('hamburgerDropdown');
+        
+        hamburgerBtn.addEventListener('click', (e) => {
+            e.stopPropagation();
+            hamburgerDropdown.classList.toggle('active');
+        });
+        
+        // Close dropdown when clicking outside
+        document.addEventListener('click', (e) => {
+            if (!hamburgerBtn.contains(e.target) && !hamburgerDropdown.contains(e.target)) {
+                hamburgerDropdown.classList.remove('active');
+            }
+        });
+    </script>
+</body>
+</html>

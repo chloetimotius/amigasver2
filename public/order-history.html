@@ -1,0 +1,224 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Order History – QuickMart</title>
+  <link rel="stylesheet" href="styles.css">
+
+  <style>
+    .order-card {
+      background: #fff;
+      padding: 20px;
+      border-radius: 12px;
+      margin: 20px auto;
+      width: 90%;
+      max-width: 900px;
+      box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+    }
+    .order-card h3 { margin-bottom: 8px; }
+    .order-items li { margin-left: 20px; }
+
+    .reorder-btn {
+      margin-top: 10px;
+      background: #4CAF50;
+      color: white;
+      padding: 10px 18px;
+      border-radius: 8px;
+      border: none;
+      cursor: pointer;
+    }
+
+    /* FILTER PANEL */
+    #filterPanel {
+      width: 90%;
+      max-width: 900px;
+      margin: 20px auto;
+      background: #f7f7f7;
+      padding: 15px 20px;
+      border-radius: 10px;
+      box-shadow: 0 4px 10px rgba(0,0,0,0.08);
+      display: none;
+    }
+
+    #filterToggle {
+      display: block;
+      margin: 0 auto;
+      margin-top: 20px;
+      background: #2196f3;
+      color: white;
+      padding: 10px 18px;
+      border-radius: 8px;
+      border: none;
+      cursor: pointer;
+    }
+
+    .filter-row {
+      margin-bottom: 12px;
+    }
+
+    select {
+      padding: 8px;
+      border-radius: 6px;
+      border: 1px solid #ccc;
+    }
+
+    .browse-btn {
+      background: #2196f3;
+      color: white;
+      padding: 12px 20px;
+      border-radius: 8px;
+      border: none;
+      cursor: pointer;
+      display: block;
+      margin: 20px auto;
+      font-size: 16px;
+    }
+
+    .home-btn {
+      display: block;
+      margin: 10px auto 0;
+      background: #ff9800;
+      color: white;
+      padding: 10px 18px;
+      border-radius: 8px;
+      border: none;
+      cursor: pointer;
+      font-size: 16px;
+      transition: 0.2s ease;
+    }
+    .home-btn:hover { background: #e68900; }
+
+    /* ✅ INSIGHTS SECTIONS */
+    #insightsContent {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 12px;
+      margin-top: 10px;
+    }
+
+    .insight-card {
+      background: #fafafa;
+      border: 1px solid #eee;
+      border-radius: 10px;
+      padding: 12px 14px;
+    }
+
+    .insight-title {
+      font-size: 13px;
+      color: #666;
+      margin: 0 0 6px;
+      font-weight: 600;
+      text-transform: uppercase;
+      letter-spacing: 0.4px;
+    }
+
+    .insight-value {
+      font-size: 18px;
+      font-weight: 700;
+      margin: 0;
+      color: #222;
+    }
+
+    .insight-sub {
+      margin: 6px 0 0;
+      font-size: 13px;
+      color: #555;
+      line-height: 1.4;
+    }
+
+    .monthly-list {
+      margin: 6px 0 0 18px;
+      padding: 0;
+    }
+    .monthly-list li { margin-bottom: 6px; }
+
+    /* Responsive */
+    @media (max-width: 650px) {
+      #insightsContent { grid-template-columns: 1fr; }
+    }
+  </style>
+</head>
+
+<body>
+
+<header>
+  <div class="header-container">
+    <a href="/index.html" class="logo">QuickMart</a>
+    <nav>
+      <ul>
+        <li><a href="/index.html">Home</a></li>
+        <li><a href="/products.html">Products</a></li>
+        <li>
+          <a href="/wishlist.html" class="icon-link">
+            <svg fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z"></path>
+            </svg>
+            Wishlist
+            <span class="icon-badge" id="wishlistCount">0</span>
+          </a>
+        </li>
+        <li>
+          <a href="/cart.html" class="icon-link">
+            <svg fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                d="M3 3h2l.4 2M7 13h10l4-8H5.4M7 13L5.4 5M7 13l-2.293 2.293c-.63.63-.184 1.707.707 1.707H17m0 0a2 2 0 100 4 2 2 0 000-4zm-8 2a2 2 0 11-4 0 2 2 0 014 0z"></path>
+            </svg>
+            Cart
+            <span class="icon-badge" id="cartCount">0</span>
+          </a>
+        </li>
+
+        <!-- Auth-aware navigation -->
+        <li id="profileLink" style="display:none;"><a href="/profile.html">Profile</a></li>
+        <li id="loginLink"><a href="/login.html">Login</a></li>
+        <li id="signupLink"><a href="/signup.html">Sign up</a></li>
+        <li><span id="userGreeting" style="display:none;"></span></li>
+        <li id="logoutContainer" style="display:none;">
+          <button id="logoutBtn" class="btn btn-secondary">Logout</button>
+        </li>
+      </ul>
+    </nav>
+  </div>
+</header>
+
+<button class="home-btn" onclick="window.location.href='/index.html'">
+  ← Back to Home
+</button>
+
+<h1 style="text-align:center; margin-top:30px;">Your Order History</h1>
+
+<!-- Contribution #2 (Data Transformation): Summary insights computed from order data -->
+<div id="insightsPanel" style="width:90%;max-width:900px;margin:20px auto;display:none;">
+  <div style="background:#d0b7ff;padding:16px 18px;border-radius:12px;box-shadow:0 4px 12px rgba(0,0,0,0.08);">
+    <h3 style="margin:0 0 10px;">Your Insights</h3>
+
+    <div id="insightsContent"></div>
+  </div>
+</div>
+
+<button id="insightsToggle"
+  style="display:block;margin:10px auto 0;background:#673ab7;color:#fff;padding:10px 18px;border-radius:8px;border:none;cursor:pointer;">
+  Show Insights
+</button>
+
+<button id="filterToggle">Sort Orders ▼</button>
+
+
+<div id="filterPanel">
+  <div class="filter-row">
+    <label><strong>Sort By:</strong></label><br>
+    <select id="sortFilter">
+      <option value="latest">Latest</option>
+      <option value="oldest">Oldest</option>
+      <option value="highest">Highest Amount</option>
+    </select>
+  </div>
+</div>
+
+<div id="ordersContainer"></div>
+
+<script src="auth-utils.js"></script>
+<script src="orderHistory.js"></script>
+</body>
+</html>

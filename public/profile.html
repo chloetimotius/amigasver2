@@ -1,0 +1,379 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Profile - QuickMart</title>
+    <!-- Global styles (nav, footer, etc.) -->
+    <link rel="stylesheet" href="styles.css">
+    <!-- Profile-specific styles -->
+    <link rel="stylesheet" href="profile.css">
+</head>
+<body>
+    <!-- ===== HEADER (KEEPING SAME STYLE) ===== -->
+    <header>
+        <div class="header-container">
+            <a href="/index.html" class="logo">QuickMart</a>
+            <nav>
+                <ul>
+                    <li><a href="/index.html">Home</a></li>
+                    <li><a href="/products.html">Products</a></li>
+                    <li>
+                        <a href="/wishlist.html" class="icon-link">
+                            <svg fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                      d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z"></path>
+                            </svg>
+                            Wishlist
+                            <span class="icon-badge" id="wishlistCount">0</span>
+                        </a>
+                    </li>
+                    <li>
+                        <a href="/cart.html" class="icon-link">
+                            <svg fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                      d="M3 3h2l.4 2M7 13h10l4-8H5.4M7 13L5.4 5M7 13l-2.293 2.293c-.63.63-.184 1.707.707 1.707H17m0 0a2 2 0 100 4 2 2 0 000-4zm-8 2a2 2 0 11-4 0 2 2 0 014 0z"></path>
+                            </svg>
+                            Cart
+                            <span class="icon-badge" id="cartCount">0</span>
+                        </a>
+                    </li>
+
+                    <!-- Auth-aware navigation -->
+                    <li id="profileLink"><a href="/profile.html" class="active">Profile</a></li>
+                    <li id="loginLink" style="display:none;"><a href="/login.html">Login</a></li>
+                    <li id="signupLink" style="display:none;"><a href="/signup.html">Sign up</a></li>
+                    <li><span id="userGreeting" style="display:none;"></span></li>
+                    <li id="logoutContainer" style="display:none;">
+                        <button id="logoutBtn" class="btn btn-secondary">Logout</button>
+                    </li>
+                </ul>
+            </nav>
+        </div>
+    </header>
+
+    <!-- ===== PROFILE CONTENT ===== -->
+    <main class="profile-container">
+        <h1>My Profile</h1>
+
+        <!-- Loading State -->
+        <div id="loadingState" class="loading-state">
+            <p>Loading profile...</p>
+        </div>
+
+        <!-- Error State -->
+        <div id="errorState" class="error-state" style="display:none;">
+            <p id="errorMessage">Something went wrong. Please try again.</p>
+            <button onclick="window.location.reload()">Retry</button>
+        </div>
+
+        <!-- Main Profile Content -->
+        <div id="profileContent" style="display:none;">
+
+            <!-- Avatar at very top -->
+            <div class="profile-image-top">
+                <div class="profile-image-container-small">
+                    <img id="profileImageDisplay"
+                         class="profile-image-small"
+                         src="/images/default-avatar.svg"
+                         alt="Profile Picture">
+                    <div class="image-overlay-small">
+                        <button id="changeImageBtn" class="change-image-btn-small" type="button">
+                            📷
+                        </button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Image Upload Area (hidden by default) -->
+            <section id="imageUploadSection" class="image-upload-section" style="display:none;">
+                <form id="imageUploadForm" enctype="multipart/form-data">
+                    <div class="upload-area">
+                        <input type="file" id="imageInput" accept="image/*" style="display:none;">
+                        <div class="upload-placeholder" id="uploadPlaceholder">
+                            <span class="upload-icon">📸</span>
+                            <p>Click to select an image or drag and drop</p>
+                            <small>JPG, PNG, GIF, WebP (Max 5MB)</small>
+                        </div>
+
+                        <div class="image-preview" id="imagePreview" style="display:none;">
+                            <img id="previewImage" alt="Preview">
+                            <button type="button" id="removePreviewBtn" class="remove-preview-btn">✕</button>
+                        </div>
+                    </div>
+
+                    <div class="upload-actions">
+                        <button type="submit" id="uploadImageBtn" class="btn-primary" disabled>
+                            Upload Image
+                        </button>
+                        <button type="button" id="cancelUploadBtn" class="btn-secondary">
+                            Cancel
+                        </button>
+                        <button type="button" id="removeImageBtn" class="btn-danger" style="display:none;">
+                            Remove Current Image
+                        </button>
+                    </div>
+
+                    <div class="upload-progress" id="uploadProgress" style="display:none;">
+                        <div class="progress-bar">
+                            <div class="progress-fill" id="progressFill"></div>
+                        </div>
+                        <span class="progress-text" id="progressText">Uploading...</span>
+                    </div>
+                </form>
+            </section>
+
+            <!-- Profile Information Card -->
+            <section class="profile-card">
+                <h2>Profile Information</h2>
+
+                <!-- View Mode -->
+                <div class="profile-info" id="profileView">
+                    <div class="info-row">
+                        <label>Name:</label>
+                        <span id="displayName">-</span>
+                    </div>
+                    <div class="info-row">
+                        <label>Email:</label>
+                        <span id="displayEmail">-</span>
+                    </div>
+                    <div class="info-row">
+                        <label>Phone:</label>
+                        <span id="displayPhone">Not provided</span>
+                    </div>
+                    <div class="info-row">
+                        <label>Default Address:</label>
+                        <span id="displayAddress">Not provided</span>
+                    </div>
+                    <div class="info-row">
+                        <label>Bio:</label>
+                        <span id="displayBio">No bio provided</span>
+                    </div>
+                    <div class="info-row">
+                        <label>Member Since:</label>
+                        <span id="displayMemberSince">-</span>
+                    </div>
+
+                    <button id="editProfileBtn" class="edit-btn" type="button">
+                        Edit Profile
+                    </button>
+                </div>
+
+                <!-- Edit Mode -->
+                <form id="profileEditForm" style="display:none;">
+                    <div class="form-group">
+                        <label for="editName">Name:</label>
+                        <input type="text" id="editName" required>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="editEmail">Email:</label>
+                        <input type="email" id="editEmail" required>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="editPhone">Phone Number:</label>
+                        <input type="tel" id="editPhone" placeholder="+65 9123 4567">
+                    </div>
+
+                    <div class="form-group">
+                        <label for="editAddress">Default Address:</label>
+                        <textarea id="editAddress"
+                                  rows="3"
+                                  placeholder="Block, Street, Unit, Postal Code"></textarea>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="editBio">Bio:</label>
+                        <textarea id="editBio"
+                                  rows="3"
+                                  placeholder="Tell us about yourself..."></textarea>
+                    </div>
+
+                    <div class="form-actions">
+                        <button type="submit" id="saveProfileBtn" class="edit-btn">
+                            Save Changes
+                        </button>
+                        <button type="button" id="cancelEditBtn" class="secondary-btn">
+                            Cancel
+                        </button>
+                    </div>
+                </form>
+            </section>
+
+            <!-- Change Password Card -->
+            <section class="profile-card">
+                <h2>Change Password</h2>
+                <form id="passwordChangeForm">
+                    <div class="form-group">
+                        <label for="currentPassword">Current Password:</label>
+                        <div class="password-input-container">
+                            <input type="password" id="currentPassword" required>
+                            <button type="button" class="eye-toggle-btn" onclick="togglePasswordVisibility('currentPassword')">
+                                <span class="eye-icon" id="currentPassword-eye">👁️</span>
+                            </button>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label for="newPassword">New Password:</label>
+                        <div class="password-input-container">
+                            <input type="password" id="newPassword" required minlength="6">
+                            <button type="button" class="eye-toggle-btn" onclick="togglePasswordVisibility('newPassword')">
+                                <span class="eye-icon" id="newPassword-eye">👁️</span>
+                            </button>
+                        </div>
+                        <div class="password-strength" id="passwordStrength"></div>
+                    </div>
+                    <div class="form-group">
+                        <label for="confirmPassword">Confirm New Password:</label>
+                        <div class="password-input-container">
+                            <input type="password" id="confirmPassword" required>
+                            <button type="button" class="eye-toggle-btn" onclick="togglePasswordVisibility('confirmPassword')">
+                                <span class="eye-icon" id="confirmPassword-eye">👁️</span>
+                            </button>
+                        </div>
+                        <div class="password-match" id="passwordMatch"></div>
+                    </div>
+                    <button type="submit" id="changePasswordBtn" class="edit-btn">
+                        Change Password
+                    </button>
+                </form>
+            </section>
+
+            <!-- Multi-Factor Authentication Card -->
+            <section class="profile-card">
+                <h2>Multi-Factor Authentication (MFA)</h2>
+                <div class="mfa-status">
+                    <div class="mfa-info">
+                        <div class="mfa-status-indicator">
+                            <span class="status-dot" id="mfaStatusDot"></span>
+                            <span class="status-text" id="mfaStatusText">Checking status...</span>
+                        </div>
+                        <p class="mfa-description">
+                            Add an extra layer of security to your account with email verification.
+                        </p>
+                    </div>
+                    
+                    <div class="mfa-controls">
+                        <button id="toggleMFABtn" class="btn" disabled>
+                            Loading...
+                        </button>
+                    </div>
+                </div>
+                
+                <!-- MFA Disable Form (shown only when disabling) -->
+                <form id="mfaDisableForm" class="mfa-disable-form" style="display: none;">
+                    <div class="form-group">
+                        <label for="mfaCurrentPassword">Enter your password to disable MFA:</label>
+                        <div class="password-input-container">
+                            <input type="password" id="mfaCurrentPassword" placeholder="Current password" required>
+                            <button type="button" class="eye-toggle-btn" onclick="togglePasswordVisibility('mfaCurrentPassword')">
+                                <span class="eye-icon" id="mfaCurrentPassword-eye">👁️</span>
+                            </button>
+                        </div>
+                    </div>
+                    <div class="mfa-disable-actions">
+                        <button type="submit" class="btn btn-danger">Confirm Disable</button>
+                        <button type="button" id="cancelMFADisable" class="btn btn-secondary">Cancel</button>
+                    </div>
+                </form>
+
+                <!-- Security Tips -->
+                <div class="security-tips">
+                    <h3>Security Recommendations</h3>
+                    <ul>
+                        <li>Enable MFA to protect your account</li>
+                        <li>Use a strong, unique password</li>
+                        <li>Never share verification codes</li>
+                    </ul>
+                </div>
+            </section>
+
+            <!-- Analytics Card -->
+            <section class="profile-card">
+                <h2>Account Analytics</h2>
+                <div class="analytics-grid">
+                    <div class="stat-item">
+                        <div class="stat-number" id="totalOrders">-</div>
+                        <div class="stat-label">Total Orders</div>
+                    </div>
+                    <div class="stat-item">
+                        <div class="stat-number" id="totalSpent">-</div>
+                        <div class="stat-label">Total Spent</div>
+                    </div>
+                    <div class="stat-item">
+                        <div class="stat-number" id="favoriteCategory">-</div>
+                        <div class="stat-label">Favorite Category</div>
+                    </div>
+                    <div class="stat-item membership-stat">
+                        <div class="stat-number membership-level" id="membershipLevel">-</div>
+                        <div class="stat-label">Membership Level</div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Recent Orders Card -->
+            <section class="profile-card">
+                <h2>Recent Orders</h2>
+
+                <p class="muted-text" id="noOrdersMessage" style="display:none;">
+                    You haven’t placed any orders yet. Once you checkout, your recent orders will appear here.
+                </p>
+
+                <div class="orders-table-wrapper">
+                    <table class="orders-table" id="recentOrdersTable">
+                        <thead>
+                            <tr>
+                                <th>Order #</th>
+                                <th>Date</th>
+                                <th>Items</th>
+                                <th>Total</th>
+                                <th>Status</th>
+                                <th>Action</th>
+                            </tr>
+                        </thead>
+                        <tbody id="recentOrdersBody">
+                            <!-- Filled by JS -->
+                        </tbody>
+                    </table>
+                </div>
+            </section>
+
+            <!-- Actions -->
+            <div class="profile-actions">
+                <button onclick="window.location.href='/'" class="secondary-btn" type="button">
+                    Back to Home
+                </button>
+                <button id="logoutFromProfile" class="danger-btn" type="button">
+                    Logout
+                </button>
+            </div>
+        </div>
+    </main>
+
+    <!-- ===== FOOTER (STANDARD) ===== -->
+    <footer>
+        <div class="footer-container">
+            <a href="/" class="logo">QuickMart</a>
+            <nav>
+                <ul>
+                    <li><a href="/">Home</a></li>
+                    <li><a href="#">Products</a></li>
+                    <li><a href="cart.html">Cart</a></li>
+                    <li><a href="/profile.html">Profile</a></li>
+                </ul>
+            </nav>
+            <div class="copyright">
+                &copy; <span id="footerYear"></span> QuickMart. All rights reserved.
+            </div>
+        </div>
+    </footer>
+
+    <script src="auth-utils.js"></script>
+    <script src="profile.js"></script>
+    <script>
+        // Keep footer year updated
+        document.getElementById('footerYear').textContent = new Date().getFullYear();
+    </script>
+</body>
+</html>

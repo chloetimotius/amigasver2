@@ -1,0 +1,306 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Recipe Detail - QuickMart</title>
+    <link rel="stylesheet" href="styles.css">
+    <style>
+        .recipe-detail-container {
+            max-width: 1200px;
+            margin: 40px auto;
+            padding: 20px;
+        }
+        
+        .recipe-header {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 40px;
+            margin-bottom: 40px;
+        }
+        
+        .recipe-image-large {
+            width: 100%;
+            height: 400px;
+            object-fit: cover;
+            border-radius: 16px;
+            box-shadow: 0 8px 30px rgba(0,0,0,0.12);
+        }
+        
+        .recipe-info h1 {
+            font-size: 2.5rem;
+            color: #2d5016;
+            margin-bottom: 15px;
+        }
+        
+        .recipe-info p {
+            color: #666;
+            font-size: 1.1rem;
+            line-height: 1.6;
+            margin-bottom: 25px;
+        }
+        
+        .recipe-times {
+            display: flex;
+            gap: 30px;
+            margin-bottom: 30px;
+        }
+        
+        .time-item {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            font-size: 1rem;
+            color: #555;
+        }
+        
+        /* SERVINGS SLIDER (STATE MANAGEMENT) */
+        .servings-control {
+            background: linear-gradient(135deg, #f8f9fa, #e9ecef);
+            padding: 25px;
+            border-radius: 16px;
+            margin-bottom: 30px;
+        }
+        
+        .servings-control h3 {
+            margin-bottom: 15px;
+            color: #2d5016;
+        }
+        
+        .slider-container {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+        }
+        
+        .servings-slider {
+            flex: 1;
+            height: 8px;
+            border-radius: 5px;
+            background: #ddd;
+            outline: none;
+            -webkit-appearance: none;
+        }
+        
+        .servings-slider::-webkit-slider-thumb {
+            -webkit-appearance: none;
+            appearance: none;
+            width: 24px;
+            height: 24px;
+            border-radius: 50%;
+            background: #4CAF50;
+            cursor: pointer;
+            box-shadow: 0 2px 8px rgba(76, 175, 80, 0.4);
+        }
+        
+        .servings-slider::-moz-range-thumb {
+            width: 24px;
+            height: 24px;
+            border-radius: 50%;
+            background: #4CAF50;
+            cursor: pointer;
+            border: none;
+        }
+        
+        .servings-value {
+            font-size: 1.8rem;
+            font-weight: 700;
+            color: #4CAF50;
+            min-width: 80px;
+            text-align: center;
+        }
+        
+        /* INGREDIENTS LIST */
+        .ingredients-section {
+            background: white;
+            padding: 30px;
+            border-radius: 16px;
+            box-shadow: 0 4px 20px rgba(0,0,0,0.08);
+            margin-bottom: 30px;
+        }
+        
+        .ingredients-section h2 {
+            color: #2d5016;
+            margin-bottom: 20px;
+            font-size: 1.8rem;
+        }
+        
+        .ingredients-list {
+            list-style: none;
+            padding: 0;
+        }
+        
+        .ingredient-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 15px;
+            border-bottom: 1px solid #f0f0f0;
+            transition: background 0.2s;
+        }
+        
+        .ingredient-item:hover {
+            background: #f8f9fa;
+        }
+        
+        .ingredient-name {
+            font-weight: 600;
+            color: #333;
+            flex: 1;
+        }
+        
+        .ingredient-quantity {
+            color: #666;
+            margin: 0 20px;
+            min-width: 100px;
+        }
+        
+        .ingredient-cost {
+            font-weight: 700;
+            color: #4CAF50;
+            min-width: 80px;
+            text-align: right;
+        }
+        
+        /* COST SUMMARY */
+        .cost-summary {
+            background: linear-gradient(135deg, #4CAF50, #45a049);
+            color: white;
+            padding: 30px;
+            border-radius: 16px;
+            box-shadow: 0 8px 30px rgba(76, 175, 80, 0.3);
+        }
+        
+        .cost-summary h2 {
+            margin-bottom: 20px;
+            font-size: 1.8rem;
+        }
+        
+        .cost-breakdown {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 15px 0;
+            border-bottom: 1px solid rgba(255,255,255,0.3);
+        }
+        
+        .cost-breakdown:last-child {
+            border-bottom: none;
+            padding-top: 20px;
+            margin-top: 10px;
+            border-top: 2px solid rgba(255,255,255,0.5);
+        }
+        
+        .cost-label {
+            font-size: 1rem;
+        }
+        
+        .cost-value {
+            font-size: 1.2rem;
+            font-weight: 700;
+        }
+        
+        .total-cost {
+            font-size: 2.5rem !important;
+            font-weight: 900 !important;
+        }
+        
+        @media (max-width: 768px) {
+            .recipe-header {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <div class="header-container">
+            <a href="/index.html" class="logo">QuickMart</a>
+            <nav>
+                <ul>
+                    <li><a href="/index.html">Home</a></li>
+                    <li><a href="/products.html">Products</a></li>
+                    <li><a href="/recipes.html">Recipes</a></li>
+                    <li><a href="/cart.html" class="icon-link">
+                        <svg fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                  d="M3 3h2l.4 2M7 13h10l4-8H5.4M7 13L5.4 5M7 13l-2.293 2.293c-.63.63-.184 1.707.707 1.707H17m0 0a2 2 0 100 4 2 2 0 000-4zm-8 2a2 2 0 11-4 0 2 2 0 014 0z"></path>
+                        </svg>
+                        Cart
+                        <span class="icon-badge" id="cartCount">0</span>
+                    </a></li>
+                </ul>
+            </nav>
+        </div>
+    </header>
+
+    <div class="recipe-detail-container">
+        <div class="recipe-header">
+            <img id="recipeImage" src="" alt="Recipe" class="recipe-image-large">
+            
+            <div class="recipe-info">
+                <h1 id="recipeName">Loading...</h1>
+                <p id="recipeDescription"></p>
+                
+                <div class="recipe-times" id="recipeTimes"></div>
+                
+                <!-- SERVINGS SLIDER (STATE MANAGEMENT ⭐) -->
+                <div class="servings-control">
+                    <h3>Adjust Servings</h3>
+                    <div class="slider-container">
+                        <input type="range" 
+                               id="servingsSlider" 
+                               class="servings-slider"
+                               min="1" 
+                               max="20" 
+                               value="4" 
+                               step="1">
+                        <div class="servings-value">
+                            <span id="servingsValue">4</span> servings
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- COST SUMMARY -->
+                <div class="cost-summary">
+                    <h2>Total Cost</h2>
+                    <div class="cost-breakdown">
+                        <span class="cost-label">Cost per serving:</span>
+                        <span class="cost-value">$<span id="costPerServing">0.00</span></span>
+                    </div>
+                    <div class="cost-breakdown">
+                        <span class="cost-label">Total cost:</span>
+                        <span class="cost-value total-cost">$<span id="totalCost">0.00</span></span>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <!-- INGREDIENTS LIST -->
+        <div class="ingredients-section">
+            <h2>Ingredients & Costs</h2>
+            <ul class="ingredients-list" id="ingredientsList">
+                <!-- Ingredients will be loaded here -->
+            </ul>
+        </div>
+    </div>
+
+    <footer>
+        <div class="footer-container">
+            <a href="/index.html" class="logo">QuickMart</a>
+            <nav>
+                <ul>
+                    <li><a href="/index.html">Home</a></li>
+                    <li><a href="/products.html">Products</a></li>
+                    <li><a href="#">About Us</a></li>
+                </ul>
+            </nav>
+            <div class="copyright">
+                &copy; Amigas 2025. All rights reserved.
+            </div>
+        </div>
+    </footer>
+
+    <script src="recipe-detail.js"></script>
+</body>
+</html>

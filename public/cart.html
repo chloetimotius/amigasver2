@@ -1,0 +1,415 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Cart - QuickMart</title>
+  <link rel="stylesheet" href="styles.css">
+
+  <style>
+    /* WRAPPER */
+    .cart-wrapper {
+      width: 90%;
+      max-width: 1300px;
+      margin: 40px auto;
+    }
+
+    /* HEADER */
+    .cart-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding-bottom: 20px;
+      border-bottom: 3px solid #4CAF50;
+      margin-bottom: 30px;
+    }
+    .cart-header h1 {
+      color: #2d5016;
+      font-size: 2.2rem;
+      margin: 0;
+    }
+
+    /* SIDE-BY-SIDE LAYOUT */
+    .cart-content {
+      display: flex;
+      gap: 30px;
+      align-items: flex-start;
+      margin-bottom: 40px;
+    }
+
+    .cart-left { flex: 2; }
+    .cart-right { flex: 1; }
+
+    /* CART TABLE */
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      margin-bottom: 30px;
+      box-shadow: 0 4px 15px rgba(0,0,0,0.08);
+      border-radius: 12px;
+      overflow: hidden;
+    }
+    th, td {
+      padding: 12px 15px;
+      text-align: left;
+      background: #fff;
+    }
+    th {
+      background: #4CAF50;
+      color: white;
+      font-weight: 600;
+    }
+    td.qty-cell {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+    }
+    .qty-btn, .delete-btn {
+      padding: 4px 10px;
+      font-size: 16px;
+      border: none;
+      border-radius: 6px;
+      cursor: pointer;
+      transition: 0.2s;
+    }
+    .delete-btn {
+      background: #ff4444;
+      color: white;
+    }
+
+    /* SUMMARY BOX */
+    .summary-box {
+      background: white;
+      padding: 20px;
+      border-radius: 12px;
+      box-shadow: 0 4px 15px rgba(0,0,0,0.08);
+    }
+    .summary-line {
+      display: flex;
+      justify-content: space-between;
+      margin-bottom: 10px;
+      font-weight: 600;
+    }
+
+    .summary-line.total span:last-child {
+      font-size: 1.4rem;
+      font-weight: bold;
+    }
+
+    /* BUTTONS */
+    .checkout-btn, .history-btn {
+      width: 100%;
+      padding: 15px;
+      margin-top: 12px;
+      font-size: 18px;
+      background: #4CAF50;
+      color: white;
+      border: none;
+      border-radius: 12px;
+      cursor: pointer;
+      font-weight: 600;
+      transition: 0.3s;
+    }
+
+    .delivery-select-btn {
+      width: 100%;
+      padding: 10px;
+      margin-top: 12px;
+      font-size: 16px;
+      background: #FFA726;
+      color: white;
+      border: none;
+      border-radius: 10px;
+      cursor: pointer;
+      transition: 0.3s;
+      font-weight: 600;
+    }
+
+    /* GAME WRAPPER */
+    .game-wrapper {
+      display: flex;
+      justify-content: space-between;
+      gap: 30px;
+      margin: 40px 0;
+    }
+
+    .game-box {
+      flex: 1;
+      background: white;
+      padding: 20px;
+      border-radius: 12px;
+      box-shadow: 0 4px 15px rgba(0,0,0,0.08);
+      text-align: center;
+    }
+
+    /* MYSTERY BOX */
+    .mystery-box-container {
+      display: flex;
+      justify-content: center;
+      gap: 20px;
+      margin-bottom: 20px;
+    }
+    .mystery-box {
+      width: 120px;
+      height: 120px;
+      background: linear-gradient(135deg, #FFD700, #FFC107);
+      border-radius: 12px;
+      border: 4px solid #333;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      font-size: 40px;
+      font-weight: bold;
+      cursor: pointer;
+      transition: 0.2s;
+      user-select: none;
+    }
+
+    /* SLOT MACHINE */
+    .slot-machine { display:flex; justify-content:center; gap:15px; margin:20px 0; }
+    .slot-reel {
+      width: 70px;
+      height: 90px;
+      border: 4px solid #333;
+      background: white;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      font-size: 42px;
+      font-weight: bold;
+      border-radius: 12px;
+      user-select: none;
+    }
+    .slot-button {
+      padding: 12px 32px;
+      font-size: 22px;
+      background: linear-gradient(135deg, #4CAF50 0%, #45a049 100%);
+      color: white;
+      border: none;
+      border-radius: 12px;
+      cursor: pointer;
+      transition: 0.3s;
+      font-weight: 700;
+      letter-spacing: 1px;
+    }
+    .slot-button:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 5px 15px rgba(76,175,80,0.4);
+    }
+
+    /* CONFETTI CANVAS */
+    #confettiCanvas {
+      position: fixed;
+      top: 0; left: 0;
+      pointer-events: none;
+      z-index: 9999;
+    }
+
+    /* TESTING TOOLS (separated from checkout) */
+    .testing-tools {
+      margin: 60px auto 10px;
+      width: 90%;
+      max-width: 1300px;
+      padding-top: 15px;
+      border-top: 1px dashed #ccc;
+      text-align: center;
+      font-size: 13px;
+      color: #888;
+    }
+    .testing-tools button {
+      background: transparent;
+      color: #888;
+      border: 1px dashed #bbb;
+      padding: 6px 12px;
+      border-radius: 6px;
+      cursor: pointer;
+      font-size: 13px;
+    }
+
+    @media (max-width: 900px) {
+      .cart-content, .game-wrapper {
+        flex-direction: column;
+      }
+    }
+  </style>
+</head>
+
+<body>
+
+<header>
+    <div class="header-container">
+      <a href="/" class="logo">QuickMart</a>
+      <nav>
+        <ul>
+          <li><a href="/index.html">Home</a></li>
+          <li><a href="/products.html">Products</a></li>
+          <li><a href="/wishlist.html" class="icon-link">
+            <svg fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z"></path>
+            </svg>
+            Wishlist
+            <span class="icon-badge" id="wishlistCount">0</span>
+          </a></li>
+          <li class="active"><a href="/cart.html" class="icon-link">
+            <svg fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                d="M3 3h2l.4 2M7 13h10l4-8H5.4M7 13L5.4 5M7 13l-2.293 2.293c-.63.63-.184 1.707.707 1.707H17m0 0a2 2 0 100 4 2 2 0 000-4zm-8 2a2 2 0 11-4 0 2 2 0 014 0z"></path>
+            </svg>
+            Cart
+            <span class="icon-badge" id="cartCount">0</span>
+          </a></li>
+              <li >
+            <a href="/orderTracking.html" class="icon-link">
+              My Orders <span class="icon-badge" id="ordersCount" style="display:none;">0</span>
+            </a>
+          </li>
+
+
+          <!-- Auth-aware navigation -->
+          <li id="profileLink" style="display:none;"><a href="/profile.html">Profile</a></li>
+          <li id="loginLink"><a href="/login.html">Login</a></li>
+          <li id="signupLink"><a href="/signup.html">Sign up</a></li>
+          <li><span id="userGreeting" style="display:none;"></span></li>
+          <li id="logoutContainer" style="display:none;">
+            <button id="logoutBtn" class="btn btn-secondary">Logout</button>
+          </li>
+        </ul>
+      </nav>
+    </div>
+</header>
+
+<canvas id="confettiCanvas"></canvas>
+
+<div class="cart-wrapper">
+  <div class="cart-header">
+    <h1>Your Cart</h1>
+  </div>
+
+  <!-- GAMIFICATION -->
+  <div class="game-wrapper">
+
+    <!-- MYSTERY BOX -->
+    <div class="game-box">
+      <h3>🎁 Choose a Mystery Box!</h3>
+      <div class="mystery-box-container">
+        <div class="mystery-box">?</div>
+        <div class="mystery-box">?</div>
+        <div class="mystery-box">?</div>
+      </div>
+      <p id="mysteryBoxResult"></p>
+    </div>
+
+    <!-- SLOT MACHINE -->
+    <div class="game-box">
+      <h3>🎰 Slot Machine Bonus!</h3>
+      <div class="slot-machine">
+        <div class="slot-reel" id="reel1">0</div>
+        <div class="slot-reel" id="reel2">0</div>
+        <div class="slot-reel">%</div>
+      </div>
+      <button id="slotSpinBtn" class="slot-button">SPIN!</button>
+      <p id="slotResult"></p>
+    </div>
+
+  </div>
+
+  <!-- CART CONTENT -->
+  <div class="cart-content">
+
+    <!-- Left -->
+    <div class="cart-left">
+      <table>
+        <thead>
+          <tr><th>Item</th><th>Qty</th><th>Subtotal</th></tr>
+        </thead>
+        <tbody id="cartTableBody"></tbody>
+      </table>
+    </div>
+
+    <!-- Right -->
+    <div class="cart-right">
+      <div class="summary-box">
+
+        <div class="summary-line"><span>Subtotal</span><span id="subtotal">$0.00</span></div>
+        <div class="summary-line"><span>GST (8%)</span><span id="gst">$0.00</span></div>
+        <div class="summary-line"><span>Service Fee</span><span>$0.50</span></div>
+        <div class="summary-line"><span>Discount</span><span id="discount">$0.00</span></div>
+        <div class="summary-line"><span>Delivery Fee</span><span class="deliveryFeeRow">$0.00</span></div>
+        <!-- COINS -->
+<div class="summary-line">
+  <span>Coins Balance</span>
+  <span id="coinBalance">0 🪙</span>
+</div>
+
+<div class="summary-line">
+  <span>Redeem Coins</span>
+  <span>
+    <input
+      type="number"
+      id="redeemCoins"
+      min="0"
+      value="0"
+      style="width:80px;padding:4px;"
+    /> 🪙
+  </span>
+</div>
+        <hr>
+
+        <div class="summary-line total">
+          <span>Total:</span><span id="finalTotal">$0.00</span>
+        </div>
+
+        <button class="delivery-select-btn" onclick="window.location.href='delivery.html'">
+          Select Delivery Option
+        </button>
+
+        <p id="selectedDeliveryText" style="font-size:14px;"></p>
+
+        <button id="placeOrderBtn" class="checkout-btn">Place Order</button>
+        <button id="viewHistoryBtn" class="history-btn">View Order History</button>
+
+        <p id="orderSuccess" style="display:none; color:green; font-weight:bold;">
+          Order placed successfully!
+        </p>
+
+      </div>
+    </div>
+
+  </div>
+</div>
+
+<!-- Testing Tools (separated from checkout flow) -->
+<div class="testing-tools">
+  <p><strong>Testing Tools</strong> — for validating date-scoped bonuses</p>
+  <button id="startNewDayBtn" type="button">Start New Day (Test)</button>
+</div>
+
+<!-- FOOTER -->
+<footer>
+  <div class="footer-container">
+    <a href="/index.html" class="logo">QuickMart</a>
+    <nav>
+      <ul>
+        <li><a href="/index.html">Home</a></li>
+        <li><a href="/products.html">Products</a></li>
+        <li><a href="#">About Us</a></li>
+      </ul>
+    </nav>
+    <div class="copyright">
+      &copy; Amigas 2025. All rights reserved.
+    </div>
+  </div>
+</footer>
+
+<script src="auth-utils.js"></script>
+<script src="cart.js"></script>
+
+<script>
+  document.getElementById("viewHistoryBtn").addEventListener("click", () => {
+    window.location.href = "/order-history.html";
+  });
+</script>
+
+</body>
+</html>

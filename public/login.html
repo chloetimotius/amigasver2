@@ -1,0 +1,147 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>QuickMart – Login</title>
+  <link rel="stylesheet" href="styles.css">
+  <link rel="stylesheet" href="login.css">
+</head>
+<body class="auth-page">
+  <!-- HEADER (unchanged) -->
+  <header>
+    <div class="header-container">
+      <a href="/index.html" class="logo">QuickMart</a>
+      <nav>
+        <ul>
+          <li><a href="/index.html">Home</a></li>
+          <li><a href="/products.html">Products</a></li>
+          <li>
+            <a href="/wishlist.html" class="icon-link">
+              <svg fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                  d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z"></path>
+              </svg>
+              Wishlist
+              <span class="icon-badge" id="wishlistCount">0</span>
+            </a>
+          </li>
+          <li>
+            <a href="/cart.html" class="icon-link">
+              <svg fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                  d="M3 3h2l.4 2M7 13h10l4-8H5.4M7 13L5.4 5M7 13l-2.293 2.293c-.63.63-.184 1.707.707 1.707H17m0 0a2 2 0 100 4 2 2 0 000-4zm-8 2a2 2 0 11-4 0 2 2 0 014 0z"></path>
+              </svg>
+              Cart
+              <span class="icon-badge" id="cartCount">0</span>
+            </a>
+          </li>
+          <li class="active"><a href="/login.html">Login</a></li>
+          <li><a href="/signup.html">Sign up</a></li>
+          <li><span id="userGreeting"></span></li>
+          <li>
+            <button id="logoutBtn" class="btn btn-secondary" style="display:none;">Logout</button>
+          </li>
+        </ul>
+      </nav>
+    </div>
+  </header>
+
+  <!-- MAIN AUTH CARD -->
+  <main class="auth-wrapper container">
+    <!-- Left: visual panel -->
+    <section class="auth-visual">
+      <div class="auth-visual-overlay">
+        <p class="auth-tagline">Fresh food, fast delivery</p>
+        <h1>Groceries to your door in minutes.</h1>
+        <p class="auth-subtext">
+          Shop fruits, veggies, snacks and daily essentials from QuickMart without leaving home.
+        </p>
+
+        <div class="auth-trust-chips">
+          <span>✅ Same-day delivery</span>
+          <span>✅ Secure checkout</span>
+          <span>✅ Freshness guaranteed</span>
+        </div>
+      </div>
+    </section>
+
+    <!-- Right: login form -->
+    <section class="auth-form">
+      <h2>Login to QuickMart</h2>
+      <p class="auth-subtitle">
+        New here?
+        <a href="/signup.html">Create an account</a>
+      </p>
+
+      <form id="loginForm" class="auth-form-card">
+        <label for="email">Email address</label>
+        <input
+          type="email"
+          id="email"
+          required
+          placeholder="you@example.com"
+          autocomplete="email"
+        >
+
+        <label for="password">Password</label>
+        <div class="password-field">
+          <input
+            type="password"
+            id="password"
+            required
+            placeholder="Enter your password"
+            autocomplete="current-password"
+          >
+          <button type="button" class="toggle-password" aria-label="Show password">
+            Show
+          </button>
+        </div>
+
+        <!-- Removed Remember me and Forgot password for security -->
+
+        <button type="submit" class="btn btn-primary auth-btn" id="loginBtn">
+          Login
+        </button>
+
+        <p id="loginMessage" class="form-message"></p>
+      </form>
+
+      <!-- MFA OTP Section (Initially Hidden) -->
+      <div id="mfaSection" class="auth-form-card" style="display: none;">
+        <div class="mfa-header">
+          <h3>Two-Factor Authentication</h3>
+          <p>Enter the verification code sent to your email:</p>
+          <p class="mfa-email" id="mfaEmail">•••@••••••.com</p>
+        </div>
+
+        <form id="mfaForm">
+          <label for="otpCode">Verification Code</label>
+          <input
+            type="text"
+            id="otpCode"
+            class="otp-input"
+            placeholder="000000"
+            maxlength="6"
+            autocomplete="one-time-code"
+            required
+          >
+          <button type="submit" class="btn btn-primary auth-btn" id="verifyBtn">
+            Verify
+          </button>
+
+          <div class="mfa-actions">
+            <button type="button" id="resendOTP" class="btn-link">
+              Resend code
+            </button>
+            <button type="button" id="backToLogin" class="btn-link">
+              Back to login
+            </button>
+          </div>
+        </form>
+      </div>
+    </section>
+  </main>
+
+  <script src="login.js"></script>
+</body>
+</html>

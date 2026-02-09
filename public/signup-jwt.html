@@ -1,0 +1,445 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>QuickMart – JWT Sign Up</title>
+  <link rel="stylesheet" href="styles.css">
+  <style>
+    .auth-container {
+      max-width: 400px;
+      margin: 50px auto;
+      padding: 2rem;
+      background: white;
+      border-radius: 12px;
+      box-shadow: 0 4px 20px rgba(0,0,0,0.1);
+    }
+    
+    .auth-toggle {
+      display: flex;
+      background: #f5f5f5;
+      border-radius: 8px;
+      margin-bottom: 2rem;
+      overflow: hidden;
+    }
+    
+    .auth-toggle button {
+      flex: 1;
+      padding: 12px;
+      border: none;
+      background: transparent;
+      cursor: pointer;
+      transition: all 0.3s ease;
+    }
+    
+    .auth-toggle button.active {
+      background: #4CAF50;
+      color: white;
+    }
+    
+    .security-badge {
+      display: inline-flex;
+      align-items: center;
+      background: #e8f5e8;
+      color: #2e7d32;
+      padding: 4px 8px;
+      border-radius: 4px;
+      font-size: 0.85rem;
+      margin-left: 10px;
+    }
+    
+    .auth-method-info {
+      background: #f8f9fa;
+      padding: 15px;
+      border-radius: 8px;
+      margin-bottom: 20px;
+      border-left: 4px solid #4CAF50;
+    }
+    
+    .password-strength {
+      margin-top: 8px;
+      font-size: 14px;
+    }
+    
+    .strength-0 { color: #f44336; }
+    .strength-1 { color: #ff9800; }
+    .strength-2 { color: #ffeb3b; }
+    .strength-3 { color: #8bc34a; }
+    .strength-4 { color: #4CAF50; }
+    
+    .password-match {
+      margin-top: 8px;
+      font-size: 14px;
+    }
+    
+    .match-good { color: #4CAF50; }
+    .match-bad { color: #f44336; }
+    
+    .loading-spinner {
+      display: none;
+      width: 20px;
+      height: 20px;
+      border: 2px solid #f3f3f3;
+      border-top: 2px solid #4CAF50;
+      border-radius: 50%;
+      animation: spin 1s linear infinite;
+      margin-right: 8px;
+    }
+    
+    @keyframes spin {
+      0% { transform: rotate(0deg); }
+      100% { transform: rotate(360deg); }
+    }
+    
+    .form-group {
+      margin-bottom: 1.5rem;
+    }
+    
+    .form-group label {
+      display: block;
+      margin-bottom: 6px;
+      font-weight: 500;
+      color: #333;
+    }
+    
+    .form-group input {
+      width: 100%;
+      padding: 12px;
+      border: 2px solid #e0e0e0;
+      border-radius: 8px;
+      font-size: 16px;
+      transition: border-color 0.3s ease;
+    }
+    
+    .form-group input:focus {
+      outline: none;
+      border-color: #4CAF50;
+    }
+    
+    .btn-primary {
+      width: 100%;
+      padding: 14px;
+      background: #4CAF50;
+      color: white;
+      border: none;
+      border-radius: 8px;
+      font-size: 16px;
+      font-weight: 500;
+      cursor: pointer;
+      transition: all 0.3s ease;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+    
+    .btn-primary:hover {
+      background: #45a049;
+    }
+    
+    .btn-primary:disabled {
+      background: #ccc;
+      cursor: not-allowed;
+    }
+    
+    .error-message {
+      color: #f44336;
+      background: #ffebee;
+      padding: 12px;
+      border-radius: 4px;
+      margin-top: 15px;
+      border-left: 4px solid #f44336;
+    }
+    
+    .success-message {
+      color: #4CAF50;
+      background: #e8f5e8;
+      padding: 12px;
+      border-radius: 4px;
+      margin-top: 15px;
+      border-left: 4px solid #4CAF50;
+    }
+    
+    .auth-links {
+      text-align: center;
+      margin-top: 20px;
+      padding-top: 20px;
+      border-top: 1px solid #e0e0e0;
+    }
+    
+    .auth-links a {
+      color: #4CAF50;
+      text-decoration: none;
+      margin: 0 10px;
+    }
+    
+    .auth-links a:hover {
+      text-decoration: underline;
+    }
+    
+    .token-display {
+      background: #f8f9fa;
+      padding: 10px;
+      border-radius: 4px;
+      margin-top: 10px;
+      word-break: break-all;
+      font-family: monospace;
+      font-size: 12px;
+      display: none;
+    }
+  </style>
+</head>
+<body>
+  <!-- Header -->
+  <header>
+    <div class="header-container">
+      <a href="/" class="logo">QuickMart</a>
+      <nav>
+        <ul>
+          <li><a href="/">Home</a></li>
+          <li><a href="products.html">Products</a></li>
+          <li><a href="cart.html">Cart</a></li>
+          <li><a href="login.html">Login</a></li>
+          <li><a href="signup.html">Sign up</a></li>
+        </ul>
+      </nav>
+    </div>
+  </header>
+
+  <div class="auth-container">
+    <h2>Create QuickMart Account</h2>
+    
+    <!-- Authentication Method Toggle -->
+    <div class="auth-toggle">
+      <button id="sessionAuthBtn" class="active">Session Auth</button>
+      <button id="jwtAuthBtn">JWT Auth <span class="security-badge">🔒 Enhanced</span></button>
+    </div>
+    
+    <!-- Auth Method Info -->
+    <div class="auth-method-info" id="authMethodInfo">
+      <strong>Session Authentication</strong><br>
+      Standard web registration with server sessions
+    </div>
+    
+    <form id="signupForm">
+      <div class="form-group">
+        <label for="name">Full Name</label>
+        <input type="text" id="name" required placeholder="Enter your full name">
+      </div>
+
+      <div class="form-group">
+        <label for="email">Email Address</label>
+        <input type="email" id="email" required placeholder="Enter your email">
+      </div>
+
+      <div class="form-group">
+        <label for="password">Password</label>
+        <input 
+          type="password" 
+          id="password" 
+          required 
+          minlength="8"
+          pattern="^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,}$"
+          placeholder="Strong password (8+ chars, uppercase, lowercase, number, symbol)"
+          title="Password must be at least 8 characters and contain uppercase, lowercase, number, and special character"
+        >
+        <div id="passwordStrength" class="password-strength"></div>
+      </div>
+
+      <div class="form-group">
+        <label for="confirmPassword">Confirm Password</label>
+        <input type="password" id="confirmPassword" required placeholder="Confirm your password">
+        <div id="passwordMatch" class="password-match"></div>
+      </div>
+
+      <button type="submit" id="signupBtn" class="btn-primary">
+        <span class="loading-spinner" id="loadingSpinner"></span>
+        <span id="signupBtnText">Create Account</span>
+      </button>
+      
+      <div id="signupMessage"></div>
+      <div id="tokenDisplay" class="token-display"></div>
+    </form>
+    
+    <div class="auth-links">
+      <a href="login-jwt.html">Already have an account? Login</a> |
+      <a href="signup.html">Use Standard Signup</a> |
+      <a href="/">Back to Home</a>
+    </div>
+  </div>
+
+  <script>
+    let isJWTMode = false;
+    
+    // Toggle between authentication methods
+    document.getElementById('sessionAuthBtn').addEventListener('click', () => {
+      setAuthMode(false);
+    });
+    
+    document.getElementById('jwtAuthBtn').addEventListener('click', () => {
+      setAuthMode(true);
+    });
+    
+    function setAuthMode(jwtMode) {
+      isJWTMode = jwtMode;
+      
+      // Update active button
+      document.getElementById('sessionAuthBtn').classList.toggle('active', !jwtMode);
+      document.getElementById('jwtAuthBtn').classList.toggle('active', jwtMode);
+      
+      // Update info text
+      const infoEl = document.getElementById('authMethodInfo');
+      if (jwtMode) {
+        infoEl.innerHTML = '<strong>🔒 JWT Authentication</strong><br>Enhanced security with stateless tokens. Perfect for mobile apps and APIs.';
+      } else {
+        infoEl.innerHTML = '<strong>Session Authentication</strong><br>Standard web registration with server sessions.';
+      }
+      
+      // Show/hide token display
+      document.getElementById('tokenDisplay').style.display = 'none';
+    }
+    
+    // Password strength checking
+    document.getElementById('password').addEventListener('input', checkPasswordStrength);
+    document.getElementById('confirmPassword').addEventListener('input', checkPasswordMatch);
+    
+    function checkPasswordStrength() {
+      const password = document.getElementById('password').value;
+      const strengthEl = document.getElementById('passwordStrength');
+      
+      if (password.length === 0) {
+        strengthEl.textContent = '';
+        return;
+      }
+
+      let strength = 0;
+      let feedback = [];
+
+      if (password.length >= 8) strength++;
+      else feedback.push('at least 8 characters');
+
+      if (/[A-Z]/.test(password)) strength++;
+      else feedback.push('uppercase letter');
+
+      if (/[0-9]/.test(password)) strength++;
+      else feedback.push('number');
+
+      if (/[^A-Za-z0-9]/.test(password)) strength++;
+      else feedback.push('special character');
+
+      const levels = ['Very Weak', 'Weak', 'Fair', 'Good', 'Strong'];
+      const level = levels[strength];
+      
+      strengthEl.textContent = `Strength: ${level}`;
+      strengthEl.className = `password-strength strength-${strength}`;
+      
+      if (feedback.length > 0 && strength < 3) {
+        strengthEl.textContent += ` (add ${feedback.join(', ')})`;
+      }
+    }
+    
+    function checkPasswordMatch() {
+      const password = document.getElementById('password').value;
+      const confirmPassword = document.getElementById('confirmPassword').value;
+      const matchEl = document.getElementById('passwordMatch');
+      
+      if (confirmPassword.length === 0) {
+        matchEl.textContent = '';
+        return;
+      }
+
+      if (password === confirmPassword) {
+        matchEl.textContent = '✓ Passwords match';
+        matchEl.className = 'password-match match-good';
+      } else {
+        matchEl.textContent = '✗ Passwords do not match';
+        matchEl.className = 'password-match match-bad';
+      }
+    }
+    
+    // Form submission
+    document.getElementById('signupForm').addEventListener('submit', async (e) => {
+      e.preventDefault();
+      
+      const signupBtn = document.getElementById('signupBtn');
+      const signupBtnText = document.getElementById('signupBtnText');
+      const loadingSpinner = document.getElementById('loadingSpinner');
+      const messageEl = document.getElementById('signupMessage');
+      const tokenDisplayEl = document.getElementById('tokenDisplay');
+      
+      // Reset messages
+      messageEl.innerHTML = '';
+      tokenDisplayEl.style.display = 'none';
+      
+      // Validate passwords match
+      const password = document.getElementById('password').value;
+      const confirmPassword = document.getElementById('confirmPassword').value;
+      
+      if (password !== confirmPassword) {
+        messageEl.innerHTML = '<div class="error-message">❌ Passwords do not match</div>';
+        return;
+      }
+      
+      // Show loading
+      signupBtn.disabled = true;
+      loadingSpinner.style.display = 'inline-block';
+      signupBtnText.textContent = 'Creating Account...';
+      
+      const name = document.getElementById('name').value.trim();
+      const email = document.getElementById('email').value.trim();
+      
+      try {
+        const endpoint = isJWTMode ? '/auth/jwt-register' : '/auth/register';
+        
+        const response = await fetch(endpoint, {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ name, email, password, confirmPassword })
+        });
+        
+        const data = await response.json();
+        
+        if (!response.ok) {
+          throw new Error(data.error || 'Registration failed');
+        }
+        
+        // Success
+        messageEl.innerHTML = '<div class="success-message">✅ Account created successfully!</div>';
+        
+        if (isJWTMode && data.accessToken) {
+          // Store JWT token
+          localStorage.setItem('accessToken', data.accessToken);
+          
+          // Show token (for demonstration)
+          tokenDisplayEl.innerHTML = `
+            <strong>JWT Access Token (stored locally):</strong><br>
+            ${data.accessToken.substring(0, 50)}...
+          `;
+          tokenDisplayEl.style.display = 'block';
+          
+          // Redirect after showing token
+          setTimeout(() => {
+            window.location.href = '/profile-jwt.html';
+          }, 2000);
+        } else {
+          // Session auth - redirect immediately
+          setTimeout(() => {
+            window.location.href = '/';
+          }, 1000);
+        }
+        
+      } catch (error) {
+        messageEl.innerHTML = `<div class="error-message">❌ ${error.message}</div>`;
+      } finally {
+        // Reset loading state
+        signupBtn.disabled = false;
+        loadingSpinner.style.display = 'none';
+        signupBtnText.textContent = 'Create Account';
+      }
+    });
+    
+    // Auto-focus name field
+    document.getElementById('name').focus();
+  </script>
+  <script src="password-validation.js"></script>
+</body>
+</html>

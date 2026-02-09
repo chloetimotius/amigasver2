@@ -1,0 +1,595 @@
+/* ============================================
+   ORDER TRACKING PAGE STYLES
+============================================ */
+
+.tracking-page-container {
+  max-width: 1400px;
+  margin: 0 auto;
+  padding: 40px 20px;
+  min-height: calc(100vh - 200px);
+}
+
+.page-header {
+  text-align: center;
+  margin-bottom: 50px;
+}
+
+.page-header h1 {
+  font-size: 2.8rem;
+  color: #2d5016;
+  margin-bottom: 10px;
+  font-weight: 700;
+}
+
+.page-header .subtitle {
+  font-size: 1.1rem;
+  color: #666;
+}
+
+/* ============================================
+   ORDERS GRID
+============================================ */
+
+.orders-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(500px, 1fr));
+  gap: 30px;
+  margin-bottom: 50px;
+}
+
+@media (max-width: 768px) {
+  .orders-grid {
+    grid-template-columns: 1fr;
+  }
+}
+
+/* ============================================
+   ORDER CARD
+============================================ */
+
+.order-card {
+  background: white;
+  border-radius: 16px;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
+  padding: 30px;
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+  position: relative;
+  overflow: hidden;
+}
+
+.order-card:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 8px 30px rgba(0, 0, 0, 0.12);
+}
+
+.order-card::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 6px;
+  background: linear-gradient(90deg, #4CAF50, #8BC34A);
+}
+
+/* ============================================
+   ORDER HEADER
+============================================ */
+
+.order-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 25px;
+  padding-bottom: 20px;
+  border-bottom: 2px solid #f0f0f0;
+}
+
+.order-id {
+  font-size: 1.4rem;
+  font-weight: 700;
+  color: #2d5016;
+}
+
+.order-date {
+  font-size: 0.9rem;
+  color: #888;
+}
+
+.order-total {
+  font-size: 1.3rem;
+  font-weight: 700;
+  color: #4CAF50;
+}
+
+/* ============================================
+   PROGRESS TRACKER - CLEAN ICONS
+============================================ */
+
+.progress-tracker {
+  margin: 30px 0;
+}
+
+.progress-steps {
+  display: flex;
+  justify-content: space-between;
+  position: relative;
+  margin-bottom: 15px;
+  padding: 0 25px;
+}
+
+.progress-step {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  flex: 1;
+  position: relative;
+  z-index: 2;
+}
+
+.step-icon {
+  width: 50px;
+  height: 50px;
+  border-radius: 50%;
+  background: white;
+  border: 4px solid #e0e0e0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 1.5rem;
+  font-weight: 900;
+  transition: all 0.5s ease;
+  position: relative;
+  z-index: 3;
+  color: #e0e0e0;
+}
+
+.progress-step.active .step-icon {
+  border-color: #4CAF50;
+  background: #4CAF50;
+  color: white;
+  animation: pulse 2s infinite;
+}
+
+.progress-step.completed .step-icon {
+  border-color: #4CAF50;
+  background: #4CAF50;
+  color: white;
+}
+
+@keyframes pulse {
+  0%, 100% {
+    box-shadow: 0 0 0 0 rgba(76, 175, 80, 0.7);
+  }
+  50% {
+    box-shadow: 0 0 0 15px rgba(76, 175, 80, 0);
+  }
+}
+
+.step-label {
+  margin-top: 12px;
+  font-size: 0.85rem;
+  color: #666;
+  font-weight: 600;
+  text-align: center;
+}
+
+.progress-step.active .step-label {
+  color: #4CAF50;
+  font-weight: 700;
+}
+
+.progress-step.completed .step-label {
+  color: #4CAF50;
+}
+
+/* Progress Line - SMOOTH ANIMATION */
+.progress-line {
+  position: absolute;
+  top: 25px;
+  left: 50px;
+  right: 50px;
+  height: 4px;
+  background: #e0e0e0;
+  z-index: 1;
+}
+
+.progress-line-fill {
+  height: 100%;
+  background: linear-gradient(90deg, #4CAF50, #8BC34A);
+  width: 0%;
+  transition: width 2s cubic-bezier(0.4, 0, 0.2, 1);
+  position: relative;
+  overflow: hidden;
+  will-change: width;
+}
+
+.progress-line-fill::after {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  bottom: 0;
+  right: 0;
+  background: linear-gradient(
+    90deg,
+    transparent,
+    rgba(255, 255, 255, 0.4),
+    transparent
+  );
+  animation: shimmer 2s infinite;
+}
+
+@keyframes shimmer {
+  0% {
+    transform: translateX(-100%);
+  }
+  100% {
+    transform: translateX(100%);
+  }
+}
+
+/* ============================================
+   STATUS INFO
+============================================ */
+
+.status-info {
+  background: linear-gradient(135deg, #f8f9fa 0%, #e9ecef 100%);
+  padding: 20px;
+  border-radius: 12px;
+  margin: 25px 0;
+  text-align: center;
+}
+
+.current-status {
+  font-size: 1.2rem;
+  font-weight: 700;
+  color: #2d5016;
+  margin-bottom: 8px;
+}
+
+.eta-time {
+  font-size: 1rem;
+  color: #666;
+}
+
+/* ============================================
+   ITEMS SECTION
+============================================ */
+
+.items-section {
+  margin-top: 25px;
+}
+
+.toggle-items-btn {
+  width: 100%;
+  padding: 15px;
+  background: linear-gradient(135deg, #4CAF50 0%, #45a049 100%);
+  color: white;
+  border: none;
+  border-radius: 10px;
+  font-size: 1rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+}
+
+.toggle-items-btn:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 5px 15px rgba(76, 175, 80, 0.3);
+}
+
+.toggle-items-btn .arrow {
+  transition: transform 0.3s ease;
+  font-size: 1.2rem;
+}
+
+.toggle-items-btn.active .arrow {
+  transform: rotate(180deg);
+}
+
+.items-list {
+  max-height: 0;
+  overflow: hidden;
+  transition: max-height 0.5s ease, opacity 0.5s ease;
+  opacity: 0;
+  margin-top: 0;
+}
+
+.items-list.show {
+  max-height: 1000px;
+  opacity: 1;
+  margin-top: 20px;
+}
+
+.item-card {
+  display: flex;
+  gap: 15px;
+  padding: 15px;
+  background: #f8f9fa;
+  border-radius: 10px;
+  margin-bottom: 12px;
+  transition: background 0.3s ease;
+  animation: slideIn 0.4s ease forwards;
+  opacity: 0;
+}
+
+@keyframes slideIn {
+  from {
+    opacity: 0;
+    transform: translateX(-20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateX(0);
+  }
+}
+
+.item-card:nth-child(1) { animation-delay: 0.1s; }
+.item-card:nth-child(2) { animation-delay: 0.2s; }
+.item-card:nth-child(3) { animation-delay: 0.3s; }
+.item-card:nth-child(4) { animation-delay: 0.4s; }
+.item-card:nth-child(5) { animation-delay: 0.5s; }
+
+.item-card:hover {
+  background: #e9ecef;
+}
+
+.item-image {
+  width: 80px;
+  height: 80px;
+  object-fit: cover;
+  border-radius: 8px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+}
+
+.item-details {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+}
+
+.item-name {
+  font-size: 1.1rem;
+  font-weight: 600;
+  color: #333;
+  margin-bottom: 5px;
+}
+
+.item-meta {
+  display: flex;
+  gap: 15px;
+  font-size: 0.9rem;
+  color: #666;
+}
+
+.item-quantity {
+  font-weight: 600;
+}
+
+.item-price {
+  color: #4CAF50;
+  font-weight: 700;
+}
+
+/* ============================================
+   EMPTY STATE
+============================================ */
+
+.no-orders {
+  text-align: center;
+  padding: 80px 20px;
+}
+
+.empty-state svg {
+  margin: 0 auto 30px;
+  opacity: 0.7;
+}
+
+.empty-state h2 {
+  font-size: 2rem;
+  color: #2d5016;
+  margin-bottom: 15px;
+}
+
+.empty-state p {
+  font-size: 1.1rem;
+  color: #666;
+  margin-bottom: 30px;
+}
+
+.browse-btn {
+  background: linear-gradient(135deg, #4CAF50 0%, #45a049 100%);
+  color: white;
+  padding: 15px 40px;
+  border: none;
+  border-radius: 10px;
+  font-size: 1.1rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
+
+.browse-btn:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 5px 15px rgba(76, 175, 80, 0.3);
+}
+
+/* ============================================
+   COMPLETE ORDER BUTTON
+============================================ */
+
+.complete-order-btn {
+  width: 100%;
+  padding: 15px;
+  margin-top: 20px;
+  background: linear-gradient(135deg, #4CAF50 0%, #45a049 100%);
+  color: white;
+  border: none;
+  border-radius: 10px;
+  font-size: 1.1rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+}
+
+.complete-order-btn:hover:not(:disabled) {
+  transform: translateY(-2px);
+  box-shadow: 0 5px 15px rgba(76, 175, 80, 0.3);
+  background: linear-gradient(135deg, #45a049 0%, #4CAF50 100%);
+}
+
+.complete-order-btn:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+}
+
+/* ============================================
+   COMPLETION OVERLAY & ANIMATION
+============================================ */
+
+.completion-overlay {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: rgba(255, 255, 255, 0.98);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 1000;
+  opacity: 0;
+  transition: opacity 0.3s ease;
+  border-radius: 16px;
+}
+
+.completion-overlay.show {
+  opacity: 1;
+}
+
+.completion-animation {
+  text-align: center;
+  animation: popIn 0.6s cubic-bezier(0.68, -0.55, 0.265, 1.55);
+}
+
+@keyframes popIn {
+  0% {
+    transform: scale(0);
+    opacity: 0;
+  }
+  50% {
+    transform: scale(1.1);
+  }
+  100% {
+    transform: scale(1);
+    opacity: 1;
+  }
+}
+
+.checkmark-circle {
+  width: 120px;
+  height: 120px;
+  background: linear-gradient(135deg, #4CAF50, #8BC34A);
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin: 0 auto 20px;
+  box-shadow: 0 8px 30px rgba(76, 175, 80, 0.4);
+  animation: scaleUp 0.6s ease 0.3s backwards;
+}
+
+@keyframes scaleUp {
+  0% {
+    transform: scale(0);
+    opacity: 0;
+  }
+  50% {
+    transform: scale(1.15);
+  }
+  100% {
+    transform: scale(1);
+    opacity: 1;
+  }
+}
+
+.checkmark {
+  font-size: 4rem;
+  color: white;
+  font-weight: bold;
+  animation: drawCheck 0.5s ease 0.5s backwards;
+}
+
+@keyframes drawCheck {
+  0% {
+    transform: scale(0);
+    opacity: 0;
+  }
+  50% {
+    transform: scale(1.2);
+  }
+  100% {
+    transform: scale(1);
+    opacity: 1;
+  }
+}
+
+.completion-text {
+  font-size: 1.8rem;
+  font-weight: 700;
+  color: #2d5016;
+  animation: fadeInUp 0.5s ease 0.7s backwards;
+}
+
+@keyframes fadeInUp {
+  0% {
+    transform: translateY(20px);
+    opacity: 0;
+  }
+  100% {
+    transform: translateY(0);
+    opacity: 1;
+  }
+}
+
+/* ============================================
+   RESPONSIVE
+============================================ */
+
+@media (max-width: 768px) {
+  .page-header h1 {
+    font-size: 2rem;
+  }
+  
+  .order-card {
+    padding: 20px;
+  }
+  
+  .progress-steps {
+    padding: 0 10px;
+  }
+  
+  .progress-line {
+    left: 35px;
+    right: 35px;
+  }
+  
+  .item-card {
+    flex-direction: column;
+    text-align: center;
+  }
+  
+  .item-image {
+    margin: 0 auto;
+  }
+}

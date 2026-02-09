@@ -1,0 +1,287 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>JWT Testing Dashboard</title>
+    <style>
+        body { font-family: Arial, sans-serif; padding: 20px; background: #f5f5f5; }
+        .test-container { max-width: 800px; margin: 0 auto; }
+        .test-card { background: white; padding: 20px; margin: 15px 0; border-radius: 8px; box-shadow: 0 2px 4px rgba(0,0,0,0.1); }
+        .test-result { padding: 10px; margin: 10px 0; border-radius: 4px; }
+        .success { background: #d4edda; border: 1px solid #c3e6cb; color: #155724; }
+        .error { background: #f8d7da; border: 1px solid #f5c6cb; color: #721c24; }
+        .info { background: #d1ecf1; border: 1px solid #bee5eb; color: #0c5460; }
+        button { background: #007bff; color: white; border: none; padding: 10px 15px; border-radius: 4px; cursor: pointer; margin: 5px; }
+        button:hover { background: #0056b3; }
+        button:disabled { background: #6c757d; cursor: not-allowed; }
+        .token-display { background: #f8f9fa; padding: 10px; border-radius: 4px; font-family: monospace; word-break: break-all; margin: 10px 0; }
+        input { padding: 8px; margin: 5px; border: 1px solid #ddd; border-radius: 4px; width: 200px; }
+    </style>
+</head>
+<body>
+    <div class="test-container">
+        <h1>🧪 JWT Authentication Test Dashboard</h1>
+        
+        <div class="test-card">
+            <h2>📝 Test Registration & Login</h2>
+            <input type="text" id="testEmail" placeholder="Email" value="test@jwt.com">
+            <input type="password" id="testPassword" placeholder="Password" value="SecurePass123">
+            <br>
+            <button onclick="testRegister()">Test JWT Register</button>
+            <button onclick="testLogin()">Test JWT Login</button>
+            <button onclick="clearToken()">Clear Token</button>
+            <div id="authResults"></div>
+        </div>
+
+        <div class="test-card">
+            <h2>🔒 Test Protected Endpoints</h2>
+            <button onclick="testProfile()">Test JWT Profile</button>
+            <button onclick="testAnalytics()">Test JWT Analytics</button>
+            <button onclick="testVerifyToken()">Verify Token</button>
+            <button onclick="testRefreshToken()">Refresh Token</button>
+            <div id="protectedResults"></div>
+        </div>
+
+        <div class="test-card">
+            <h2>🔄 Compare Auth Methods</h2>
+            <button onclick="compareAuthMethods()">Compare JWT vs Session</button>
+            <div id="compareResults"></div>
+        </div>
+
+        <div class="test-card">
+            <h2>📊 Current Token Status</h2>
+            <button onclick="showTokenInfo()">Show Token Info</button>
+            <div id="tokenInfo"></div>
+        </div>
+    </div>
+
+    <script>
+        // Test JWT Registration
+        async function testRegister() {
+            const email = document.getElementById('testEmail').value;
+            const password = document.getElementById('testPassword').value;
+            
+            try {
+                const response = await fetch('/auth/jwt-register', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({
+                        name: 'Test User JWT',
+                        email,
+                        password,
+                        confirmPassword: password
+                    })
+                });
+
+                const data = await response.json();
+                
+                if (response.ok) {
+                    localStorage.setItem('accessToken', data.accessToken);
+                    showResult('authResults', 'success', `✅ Registration successful! Token: ${data.accessToken.substring(0, 50)}...`);
+                } else {
+                    showResult('authResults', 'error', `❌ Registration failed: ${data.error}`);
+                }
+            } catch (error) {
+                showResult('authResults', 'error', `❌ Registration error: ${error.message}`);
+            }
+        }
+
+        // Test JWT Login
+        async function testLogin() {
+            const email = document.getElementById('testEmail').value;
+            const password = document.getElementById('testPassword').value;
+            
+            try {
+                const response = await fetch('/auth/jwt-login', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ email, password })
+                });
+
+                const data = await response.json();
+                
+                if (response.ok) {
+                    localStorage.setItem('accessToken', data.accessToken);
+                    showResult('authResults', 'success', `✅ Login successful! Token: ${data.accessToken.substring(0, 50)}...`);
+                } else {
+                    showResult('authResults', 'error', `❌ Login failed: ${data.error}`);
+                }
+            } catch (error) {
+                showResult('authResults', 'error', `❌ Login error: ${error.message}`);
+            }
+        }
+
+        // Test JWT Profile
+        async function testProfile() {
+            const token = localStorage.getItem('accessToken');
+            if (!token) {
+                showResult('protectedResults', 'error', '❌ No token found. Please login first.');
+                return;
+            }
+
+            try {
+                const response = await fetch('/profile/jwt', {
+                    headers: { 'Authorization': `Bearer ${token}` }
+                });
+
+                const data = await response.json();
+                
+                if (response.ok) {
+                    showResult('protectedResults', 'success', `✅ Profile loaded! Auth Type: ${data.authType}, Name: ${data.name}`);
+                } else {
+                    showResult('protectedResults', 'error', `❌ Profile failed: ${data.error}`);
+                }
+            } catch (error) {
+                showResult('protectedResults', 'error', `❌ Profile error: ${error.message}`);
+            }
+        }
+
+        // Test JWT Analytics
+        async function testAnalytics() {
+            const token = localStorage.getItem('accessToken');
+            if (!token) {
+                showResult('protectedResults', 'error', '❌ No token found. Please login first.');
+                return;
+            }
+
+            try {
+                const response = await fetch('/profile/jwt/analytics', {
+                    headers: { 'Authorization': `Bearer ${token}` }
+                });
+
+                const data = await response.json();
+                
+                if (response.ok) {
+                    showResult('protectedResults', 'success', `✅ Analytics loaded! Security Level: ${data.sessionInfo?.securityLevel}, Auth: ${data.authType}`);
+                } else {
+                    showResult('protectedResults', 'error', `❌ Analytics failed: ${data.error}`);
+                }
+            } catch (error) {
+                showResult('protectedResults', 'error', `❌ Analytics error: ${error.message}`);
+            }
+        }
+
+        // Test Token Verification
+        async function testVerifyToken() {
+            const token = localStorage.getItem('accessToken');
+            if (!token) {
+                showResult('protectedResults', 'error', '❌ No token found. Please login first.');
+                return;
+            }
+
+            try {
+                const response = await fetch('/auth/jwt-verify', {
+                    headers: { 'Authorization': `Bearer ${token}` }
+                });
+
+                const data = await response.json();
+                
+                if (response.ok) {
+                    showResult('protectedResults', 'success', `✅ Token valid! User: ${data.user.name} (${data.user.email})`);
+                } else {
+                    showResult('protectedResults', 'error', `❌ Token verification failed: ${data.error}`);
+                }
+            } catch (error) {
+                showResult('protectedResults', 'error', `❌ Verification error: ${error.message}`);
+            }
+        }
+
+        // Test Token Refresh
+        async function testRefreshToken() {
+            try {
+                const response = await fetch('/auth/jwt-refresh', {
+                    method: 'POST'
+                });
+
+                const data = await response.json();
+                
+                if (response.ok) {
+                    localStorage.setItem('accessToken', data.accessToken);
+                    showResult('protectedResults', 'success', `✅ Token refreshed! New token: ${data.accessToken.substring(0, 50)}...`);
+                } else {
+                    showResult('protectedResults', 'error', `❌ Refresh failed: ${data.error}`);
+                }
+            } catch (error) {
+                showResult('protectedResults', 'error', `❌ Refresh error: ${error.message}`);
+            }
+        }
+
+        // Compare Auth Methods
+        async function compareAuthMethods() {
+            const token = localStorage.getItem('accessToken');
+            
+            try {
+                // Test JWT
+                const jwtResponse = await fetch('/profile/jwt', {
+                    headers: token ? { 'Authorization': `Bearer ${token}` } : {}
+                });
+                const jwtData = jwtResponse.ok ? await jwtResponse.json() : { error: 'JWT failed' };
+
+                // Test Session
+                const sessionResponse = await fetch('/profile');
+                const sessionData = sessionResponse.ok ? await sessionResponse.json() : { error: 'Session failed' };
+
+                const comparison = `
+                    <div class="token-display">
+                        <strong>JWT Auth:</strong> ${jwtResponse.ok ? `✅ Success (${jwtData.authType})` : `❌ Failed`}<br>
+                        <strong>Session Auth:</strong> ${sessionResponse.ok ? `✅ Success` : `❌ Failed`}<br>
+                        <strong>JWT Security:</strong> ${jwtData.sessionInfo?.securityLevel || 'N/A'}<br>
+                        <strong>Recommendation:</strong> Use JWT for APIs, Session for web pages
+                    </div>
+                `;
+                
+                showResult('compareResults', 'info', comparison);
+            } catch (error) {
+                showResult('compareResults', 'error', `❌ Comparison error: ${error.message}`);
+            }
+        }
+
+        // Show Token Info
+        function showTokenInfo() {
+            const token = localStorage.getItem('accessToken');
+            
+            if (!token) {
+                showResult('tokenInfo', 'info', '💡 No JWT token stored');
+                return;
+            }
+
+            try {
+                // Decode JWT payload (Note: This is just for display, don't do this in production for security)
+                const payload = JSON.parse(atob(token.split('.')[1]));
+                const now = Math.floor(Date.now() / 1000);
+                const expiresIn = payload.exp - now;
+                
+                const info = `
+                    <div class="token-display">
+                        <strong>User:</strong> ${payload.name} (${payload.email})<br>
+                        <strong>Issued:</strong> ${new Date(payload.iat * 1000).toLocaleString()}<br>
+                        <strong>Expires:</strong> ${new Date(payload.exp * 1000).toLocaleString()}<br>
+                        <strong>Time Remaining:</strong> ${expiresIn > 0 ? Math.floor(expiresIn / 3600) + ' hours' : 'Expired'}<br>
+                        <strong>Token:</strong> ${token.substring(0, 100)}...
+                    </div>
+                `;
+                
+                showResult('tokenInfo', expiresIn > 0 ? 'success' : 'error', info);
+            } catch (error) {
+                showResult('tokenInfo', 'error', `❌ Error reading token: ${error.message}`);
+            }
+        }
+
+        // Clear Token
+        function clearToken() {
+            localStorage.removeItem('accessToken');
+            showResult('authResults', 'info', '🗑️ Token cleared from localStorage');
+        }
+
+        // Utility function to show results
+        function showResult(containerId, type, message) {
+            const container = document.getElementById(containerId);
+            container.innerHTML = `<div class="test-result ${type}">${message}</div>`;
+        }
+
+        // Auto-load token info on page load
+        document.addEventListener('DOMContentLoaded', showTokenInfo);
+    </script>
+</body>
+</html>

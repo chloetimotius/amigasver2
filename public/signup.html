@@ -1,0 +1,151 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>QuickMart – Sign up</title>
+  <link rel="stylesheet" href="styles.css">
+  <link rel="stylesheet" href="signup.css">
+</head>
+<body class="auth-page">
+  <!-- HEADER (same as login) -->
+  <header>
+    <div class="header-container">
+      <a href="/index.html" class="logo">QuickMart</a>
+      <nav>
+        <ul>
+          <li><a href="/index.html">Home</a></li>
+          <li><a href="/products.html">Products</a></li>
+          <li>
+            <a href="/wishlist.html" class="icon-link">
+              <svg fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                  d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z"></path>
+              </svg>
+              Wishlist
+              <span class="icon-badge" id="wishlistCount">0</span>
+            </a>
+          </li>
+          <li>
+            <a href="/cart.html" class="icon-link">
+              <svg fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                  d="M3 3h2l.4 2M7 13h10l4-8H5.4M7 13L5.4 5M7 13l-2.293 2.293c-.63.63-.184 1.707.707 1.707H17m0 0a2 2 0 100 4 2 2 0 000-4zm-8 2a2 2 0 11-4 0 2 2 0 014 0z"></path>
+              </svg>
+              Cart
+              <span class="icon-badge" id="cartCount">0</span>
+            </a>
+          </li>
+          <li><a href="/login.html">Login</a></li>
+          <li class="active"><a href="/signup.html">Sign up</a></li>
+          <li><span id="userGreeting"></span></li>
+          <li>
+            <button id="logoutBtn" class="btn btn-secondary" style="display:none;">Logout</button>
+          </li>
+        </ul>
+      </nav>
+    </div>
+  </header>
+
+  <!-- MAIN AUTH CARD (same layout as login) -->
+  <main class="auth-wrapper container">
+    <!-- Left visual panel -->
+    <section class="auth-visual">
+      <div class="auth-visual-overlay">
+        <p class="auth-tagline">Fresh food, fast delivery</p>
+        <h1>Join QuickMart and shop smarter.</h1>
+        <p class="auth-subtext">
+          Create a free account to save your cart, track orders and get personalised deals.
+        </p>
+
+        <div class="auth-trust-chips">
+          <span>✅ Same-day delivery</span>
+          <span>✅ Secure checkout</span>
+          <span>✅ Freshness guaranteed</span>
+        </div>
+      </div>
+    </section>
+
+    <!-- Right: sign up form -->
+    <section class="auth-form">
+      <h2>Create your QuickMart account</h2>
+      <p class="auth-subtitle">
+        Already have an account?
+        <a href="/login.html">Login instead</a>
+      </p>
+
+      <form id="signupForm" class="auth-form-card">
+        <label for="name">Full name</label>
+        <input
+          type="text"
+          id="name"
+          required
+          placeholder="your full name"
+          autocomplete="name"
+        >
+
+        <label for="email">Email address</label>
+        <input
+          type="email"
+          id="email"
+          required
+          placeholder="you@example.com"
+          autocomplete="email"
+        >
+
+        <label for="password">Password</label>
+        <div class="password-field">
+          <input
+            type="password"
+            id="password"
+            required
+            minlength="8"
+            pattern="^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,}$"
+            placeholder="Enter your password"
+            autocomplete="new-password"
+            title="Password must be at least 8 characters and contain uppercase, lowercase, number, and special character"
+          >
+          <button
+            type="button"
+            class="toggle-password"
+            data-target="password"
+            aria-label="Show password"
+          >
+            Show
+          </button>
+        </div>
+        <div id="passwordStrength" class="password-strength"></div>
+
+        <label for="confirmPassword">Confirm password</label>
+        <div class="password-field">
+          <input
+            type="password"
+            id="confirmPassword"
+            required
+            minlength="8"
+            placeholder="Re-enter your password"
+            autocomplete="new-password"
+          >
+          <button
+            type="button"
+            class="toggle-password"
+            data-target="confirmPassword"
+            aria-label="Show confirm password"
+          >
+            Show
+          </button>
+        </div>
+        <div id="passwordMatch" class="password-match"></div>
+
+        <button type="submit" class="btn btn-primary auth-btn" id="signupBtn">
+          Create account
+        </button>
+
+        <p id="signupMessage" class="form-message"></p>
+      </form>
+    </section>
+  </main>
+
+  <script src="password-validation.js"></script>
+  <script src="signup.js"></script>
+</body>
+</html>

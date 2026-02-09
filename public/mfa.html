@@ -1,0 +1,120 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Multi-Factor Authentication</title>
+    <link rel="stylesheet" href="styles.css">
+    <style>
+        .mfa-container {
+            max-width: 400px;
+            margin: 50px auto;
+            padding: 30px;
+            background: white;
+            border-radius: 10px;
+            box-shadow: 0 2px 20px rgba(0, 0, 0, 0.1);
+        }
+
+        .mfa-step {
+            display: none;
+        }
+
+        .mfa-step.active {
+            display: block;
+        }
+
+        .otp-input {
+            font-size: 24px;
+            text-align: center;
+            letter-spacing: 10px;
+            font-family: monospace;
+            padding: 15px;
+            border: 2px solid #ddd;
+            border-radius: 5px;
+            width: 100%;
+            margin: 20px 0;
+        }
+
+        .security-info {
+            background: #f8f9fa;
+            padding: 15px;
+            border-radius: 5px;
+            margin: 20px 0;
+            border-left: 4px solid #007bff;
+        }
+
+        .error-message {
+            background: #f8d7da;
+            color: #721c24;
+            padding: 10px;
+            border-radius: 5px;
+            margin: 10px 0;
+            border: 1px solid #f5c6cb;
+        }
+
+        .success-message {
+            background: #d4edda;
+            color: #155724;
+            padding: 10px;
+            border-radius: 5px;
+            margin: 10px 0;
+            border: 1px solid #c3e6cb;
+        }
+
+        .countdown {
+            color: #666;
+            font-size: 14px;
+            text-align: center;
+            margin-top: 10px;
+        }
+    </style>
+</head>
+<body>
+    <div class="mfa-container">
+        <h2>🔐 Multi-Factor Authentication</h2>
+        
+        <!-- Step 1: Email Input -->
+        <div id="step-email" class="mfa-step active">
+            <p>Enter your email to receive a verification code:</p>
+            <form id="mfa-email-form">
+                <input type="email" id="email" placeholder="Enter your email" required>
+                <button type="submit" class="btn primary">Send Verification Code</button>
+            </form>
+            
+            <div class="security-info">
+                <strong>🛡️ Enhanced Security</strong><br>
+                We'll send a 6-digit code to your email to verify it's really you.
+            </div>
+        </div>
+
+        <!-- Step 2: OTP Verification -->
+        <div id="step-otp" class="mfa-step">
+            <p>Enter the 6-digit code sent to <span id="masked-email"></span>:</p>
+            <form id="mfa-otp-form">
+                <input type="text" id="otp" class="otp-input" placeholder="000000" maxlength="6" required>
+                <button type="submit" class="btn primary">Verify Code</button>
+            </form>
+            
+            <div class="countdown" id="countdown"></div>
+            
+            <p style="text-align: center; margin-top: 20px;">
+                <a href="#" id="resend-code">Didn't receive the code? Resend</a>
+            </p>
+        </div>
+
+        <!-- Step 3: Success -->
+        <div id="step-success" class="mfa-step">
+            <div class="success-message">
+                <h3>✅ Verification Successful!</h3>
+                <p>You have been successfully authenticated.</p>
+            </div>
+            <button onclick="window.location.href='profile.html'" class="btn primary">Continue to Profile</button>
+        </div>
+
+        <!-- Messages -->
+        <div id="message-container"></div>
+    </div>
+
+    <script src="mfa.js"></script>
+</body>
+</html>

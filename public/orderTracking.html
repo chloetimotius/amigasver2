@@ -1,0 +1,101 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>QuickMart - My Orders</title>
+  <link rel="stylesheet" href="styles.css" />
+  <link rel="stylesheet" href="orderTracking.css" />
+</head>
+
+<body>
+  <!-- Header -->
+<header>
+    <div class="header-container">
+      <a href="/" class="logo">QuickMart</a>
+      <nav>
+        <ul>
+          <li><a href="/index.html">Home</a></li>
+          <li><a href="/products.html">Products</a></li>
+          <li><a href="/wishlist.html" class="icon-link">
+            <svg fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z"></path>
+            </svg>
+            Wishlist
+            <span class="icon-badge" id="wishlistCount">0</span>
+          </a></li>
+           <li>
+                        <a href="/cart.html" class="icon-link">
+                            <svg fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                      d="M3 3h2l.4 2M7 13h10l4-8H5.4M7 13L5.4 5M7 13l-2.293 2.293c-.63.63-.184 1.707.707 1.707H17m0 0a2 2 0 100 4 2 2 0 000-4zm-8 2a2 2 0 11-4 0 2 2 0 014 0z"></path>
+                            </svg>
+                            Cart
+                            <span class="icon-badge" id="cartCount">0</span>
+                        </a>
+                    </li>
+                    <li class="active">
+            <a href="/orderTracking.html" class="icon-link">
+              My Orders <span class="icon-badge" id="ordersCount" style="display:none;">0</span>
+            </a>
+          </li>
+
+
+          <!-- Auth-aware navigation -->
+          <li id="profileLink" style="display:none;"><a href="/profile.html">Profile</a></li>
+          <li id="loginLink"><a href="/login.html">Login</a></li>
+          <li id="signupLink"><a href="/signup.html">Sign up</a></li>
+          <li><span id="userGreeting" style="display:none;"></span></li>
+          <li id="logoutContainer" style="display:none;">
+            <button id="logoutBtn" class="btn btn-secondary">Logout</button>
+          </li>
+        </ul>
+      </nav>
+    </div>
+</header>
+
+  <!-- PAGE CONTENT -->
+  <main class="tracking-page-container">
+    <div class="page-header">
+      <h1>Track Your Orders</h1>
+      <p class="subtitle">Monitor your deliveries in real-time</p>
+    </div>
+    
+    <div id="ordersContainer" class="orders-grid"></div>
+    
+    <div id="noOrders" class="no-orders" style="display:none;">
+      <div class="empty-state">
+        <svg width="120" height="120" viewBox="0 0 120 120" fill="none">
+          <circle cx="60" cy="60" r="50" stroke="#e0e0e0" stroke-width="4"/>
+          <path d="M40 60 L55 75 L80 45" stroke="#4CAF50" stroke-width="6" stroke-linecap="round" stroke-linejoin="round"/>
+        </svg>
+        <h2>No Orders Yet</h2>
+        <p>Start shopping to see your orders here!</p>
+        <button class="browse-btn" onclick="window.location.href='/products.html'">
+          Browse Products
+        </button>
+      </div>
+    </div>
+  </main>
+
+  <!-- Footer -->
+  <footer>
+    <div class="footer-container">
+      <a href="/index.html" class="logo">QuickMart</a>
+      <nav>
+        <ul>
+          <li><a href="/index.html">Home</a></li>
+          <li><a href="/products.html">Products</a></li>
+          <li><a href="#">About Us</a></li>
+        </ul>
+      </nav>
+      <div class="copyright">
+        &copy; Amigas 2025. All rights reserved.
+      </div>
+    </div>
+  </footer>
+
+  <script src="orderTracking.js"></script>
+</body>
+</html>
